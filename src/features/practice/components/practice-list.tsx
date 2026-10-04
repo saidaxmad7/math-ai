@@ -206,7 +206,7 @@ export function PracticeList() {
                             label='Holat'
                             icon={<CheckCircle2 className='h-4 w-4 text-violet-500' />}
                             value={filters.status === 'all' ? undefined : filters.status}
-                            onChange={(val) => updateFilter('status', val ?? 'all')}
+                            onChange={(val) => updateFilter('status', (val as PracticeQuery['status']) ?? 'all')}
                             options={statusOptions}
                             allLabel='Barcha holatlar'
                         />

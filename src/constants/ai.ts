@@ -1,0 +1,4 @@
+export const AI_MAX_MESSAGE_LENGTH = 12_000;
+export const AI_MAX_HISTORY_MESSAGES = 20;
+export const AI_MAX_CONTEXT_DESCRIPTION_LENGTH = 500;
+export const AI_DEFAULT_CONVERSATION_TITLE = 'Yangi suhbat';

@@ -39,3 +39,15 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# scratch & temporary files
+scratch/
+scratch_*.py
+scratch*.py
+temp_out.html
+*.log
+
+# uploaded heavy textbook PDFs (PDFs > 50MB should not be committed to Git)
+public/uploads/books/*.pdf
+!public/uploads/books/.gitkeep
+

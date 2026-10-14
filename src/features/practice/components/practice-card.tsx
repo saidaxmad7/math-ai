@@ -7,13 +7,14 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import type { PracticeLessonResponse } from '@/mappers/practice.mapper';
+import { useLanguage } from '@/i18n/language-context';
 
 type PracticeCardProps = {
     lesson: PracticeLessonResponse;
     onStartQuiz?: (topicId: string, topicTitle: string) => void;
 };
 
-function formatCompletionDate(date: Date | string | null | undefined) {
+function formatCompletionDate(date: Date | string | null | undefined, locale: string) {
     if (!date) {
         return null;
     }
@@ -24,7 +25,7 @@ function formatCompletionDate(date: Date | string | null | undefined) {
     }
 
     try {
-        return new Intl.DateTimeFormat('uz-UZ', {
+        return new Intl.DateTimeFormat(locale === 'uz' ? 'uz-UZ' : 'en-US', {
             dateStyle: 'medium',
         }).format(parsed);
     } catch {
@@ -32,8 +33,9 @@ function formatCompletionDate(date: Date | string | null | undefined) {
     }
 }
 
-
 export function PracticeCard({ lesson, onStartQuiz }: PracticeCardProps) {
+    const { translations, language } = useLanguage();
+
     return (
         <Card className='flex h-full flex-col justify-between transition-all hover:-translate-y-1 hover:border-primary hover:shadow-md'>
             <CardHeader>
@@ -49,20 +51,22 @@ export function PracticeCard({ lesson, onStartQuiz }: PracticeCardProps) {
                     </div>
                     <Badge variant={lesson.completed ? 'secondary' : 'outline'}>
                         {lesson.completed && <CheckCircle2 className='mr-1 h-3 w-3 text-emerald-500' />}
-                        {lesson.completed ? 'Tugallangan' : 'Tugallanmagan'}
+                        {lesson.completed
+                            ? translations.practice.completedStatus
+                            : translations.practice.incompleteStatus}
                     </Badge>
                 </div>
             </CardHeader>
             <CardContent className='flex flex-1 flex-col justify-between gap-6'>
                 <div className='space-y-2 text-sm text-muted-foreground'>
                     <p className='font-medium text-foreground'>
-                        Mavzu: {lesson.topic.title}
+                        {language === 'uz' ? 'Mavzu:' : 'Topic:'} {lesson.topic.title}
                     </p>
                     {lesson.description && <p>{lesson.description}</p>}
                     {lesson.completedAt && (
                         <p className='text-xs'>
-                            Tugatilgan sana:{' '}
-                            {formatCompletionDate(lesson.completedAt)}
+                            {language === 'uz' ? 'Tugatilgan sana:' : 'Completed on:'}{' '}
+                            {formatCompletionDate(lesson.completedAt, language)}
                         </p>
                     )}
                 </div>
@@ -85,7 +89,7 @@ export function PracticeCard({ lesson, onStartQuiz }: PracticeCardProps) {
                         className='inline-flex items-center gap-1.5 text-xs font-medium text-muted-foreground hover:text-foreground'
                     >
                         <BookOpen className='h-3.5 w-3.5' />
-                        Darsni o&apos;qish
+                        {language === 'uz' ? "Darsni o'qish" : "Read Lesson"}
                         <ArrowRight className='h-3 w-3' />
                     </Link>
                 </div>

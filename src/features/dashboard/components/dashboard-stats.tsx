@@ -4,34 +4,40 @@ import { BookOpen, Brain, ChartColumn, CircleCheckBig } from 'lucide-react';
 
 import { StatCard } from '@/features/dashboard/components/stat-card';
 import { useDashboard } from '@/hooks/use-dashboard';
+import { useLanguage } from '@/i18n/language-context';
 
 export function DashboardStats() {
     const { data: dashboard, isLoading } = useDashboard();
+    const { translations } = useLanguage();
 
     const stats = [
         {
-            title: 'Solved Problems',
+            title: translations.dashboard.solvedProblems,
             value: '0',
-            description: 'Total completed questions',
+            description: translations.dashboard.solvedProblemsDesc,
             icon: CircleCheckBig,
+            isLoadingField: false,
         },
         {
-            title: 'Completed Lessons',
+            title: translations.dashboard.completedLessons,
             value: dashboard ? String(dashboard.completedLessons) : '0',
-            description: 'Lessons you have finished',
+            description: translations.dashboard.completedLessonsDesc,
             icon: BookOpen,
+            isLoadingField: true,
         },
         {
-            title: 'AI Sessions',
+            title: translations.dashboard.aiSessions,
             value: '0',
-            description: 'Practice sessions with AI',
+            description: translations.dashboard.aiSessionsDesc,
             icon: Brain,
+            isLoadingField: false,
         },
         {
-            title: 'Overall Progress',
+            title: translations.dashboard.overallProgress,
             value: dashboard ? `${dashboard.progressPercentage}%` : '0%',
-            description: 'Learning progress',
+            description: translations.dashboard.overallProgressDesc,
             icon: ChartColumn,
+            isLoadingField: true,
         },
     ];
 
@@ -41,13 +47,7 @@ export function DashboardStats() {
                 <StatCard
                     key={stat.title}
                     title={stat.title}
-                    value={
-                        isLoading &&
-                        (stat.title === 'Completed Lessons' ||
-                            stat.title === 'Overall Progress')
-                            ? '...'
-                            : stat.value
-                    }
+                    value={isLoading && stat.isLoadingField ? '...' : stat.value}
                     description={stat.description}
                     icon={stat.icon}
                 />

@@ -1,11 +1,12 @@
 'use client';
 
 import { useState } from 'react';
-import { ChevronDown, ChevronUp, Lightbulb, CheckCircle2, Sparkles, HelpCircle } from 'lucide-react';
+import { ChevronDown, ChevronUp, Lightbulb, CheckCircle2, Sparkles } from 'lucide-react';
 import { Markdown } from '@/components/math/markdown';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
+import { useLanguage } from '@/i18n/language-context';
 
 export type WorkedExampleItem = {
     id: string;
@@ -22,8 +23,8 @@ type WorkedExamplesSectionProps = {
 };
 
 export function WorkedExamplesSection({ examples }: WorkedExamplesSectionProps) {
+    const { language } = useLanguage();
     const [expandedIds, setExpandedIds] = useState<Record<string, boolean>>(() => {
-        // Expand first example by default
         if (examples.length > 0) {
             return { [examples[0].id]: true };
         }
@@ -46,20 +47,20 @@ export function WorkedExamplesSection({ examples }: WorkedExamplesSectionProps) 
             case 'EASY':
                 return (
                     <Badge variant='outline' className='border-emerald-500/30 bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 font-medium text-xs'>
-                        🟢 Oson daraja
+                        {language === 'uz' ? '🟢 Oson daraja' : '🟢 Easy'}
                     </Badge>
                 );
             case 'HARD':
                 return (
                     <Badge variant='outline' className='border-rose-500/30 bg-rose-500/10 text-rose-600 dark:text-rose-400 font-medium text-xs'>
-                        🔴 Murakkab daraja
+                        {language === 'uz' ? '🔴 Murakkab daraja' : '🔴 Advanced'}
                     </Badge>
                 );
             case 'MEDIUM':
             default:
                 return (
                     <Badge variant='outline' className='border-amber-500/30 bg-amber-500/10 text-amber-600 dark:text-amber-400 font-medium text-xs'>
-                        🟡 O‘rtacha daraja
+                        {language === 'uz' ? '🟡 O‘rtacha daraja' : '🟡 Intermediate'}
                     </Badge>
                 );
         }
@@ -73,10 +74,12 @@ export function WorkedExamplesSection({ examples }: WorkedExamplesSectionProps) 
                 </div>
                 <div>
                     <h2 className='font-heading text-2xl font-bold tracking-tight text-foreground'>
-                        Namunaviy yechilgan misollar
+                        {language === 'uz' ? 'Namunaviy yechilgan misollar' : 'Step-by-step Worked Examples'}
                     </h2>
                     <p className='text-sm text-muted-foreground'>
-                        Darslikdagi masalalar va ularning qadam-baqadam yechish algoritmi
+                        {language === 'uz'
+                            ? 'Darslikdagi masalalar va ularning qadam-baqadam yechish algoritmi'
+                            : 'Textbook problems and their complete step-by-step solution algorithms'}
                     </p>
                 </div>
             </div>
@@ -124,7 +127,11 @@ export function WorkedExamplesSection({ examples }: WorkedExamplesSectionProps) 
                                         toggleExample(ex.id);
                                     }}
                                 >
-                                    <span>{isExpanded ? 'Yashirish' : 'Yechimni ko‘rish'}</span>
+                                    <span>
+                                        {isExpanded
+                                            ? (language === 'uz' ? 'Yashirish' : 'Hide')
+                                            : (language === 'uz' ? 'Yechimni ko‘rish' : 'View Solution')}
+                                    </span>
                                     {isExpanded ? (
                                         <ChevronUp className='h-4 w-4 text-muted-foreground' />
                                     ) : (
@@ -138,7 +145,9 @@ export function WorkedExamplesSection({ examples }: WorkedExamplesSectionProps) 
                                 <div className='border-t bg-muted/20 p-5 space-y-4 animate-in fade-in-50 duration-200'>
                                     <div className='flex items-center gap-2 text-sm font-semibold text-primary'>
                                         <CheckCircle2 className='h-4 w-4' />
-                                        <span>Bosqichma-bosqich yechim:</span>
+                                        <span>
+                                            {language === 'uz' ? 'Bosqichma-bosqich yechim:' : 'Step-by-step solution:'}
+                                        </span>
                                     </div>
 
                                     <div className='rounded-xl border bg-card p-4'>
@@ -149,12 +158,10 @@ export function WorkedExamplesSection({ examples }: WorkedExamplesSectionProps) 
                                         <div className='flex items-start gap-2.5 rounded-xl border border-amber-500/30 bg-amber-500/10 p-4 text-sm text-foreground/90'>
                                             <Lightbulb className='h-4 w-4 shrink-0 text-amber-500 mt-0.5' />
                                             <div>
-                                                <strong className='font-semibold text-amber-600 dark:text-amber-400'>
-                                                    💡 Qo‘llanilgan qoida:
-                                                </strong>
-                                                <div className='mt-1'>
-                                                    <Markdown content={ex.ruleSummary} />
-                                                </div>
+                                                <span className='font-semibold text-amber-800 dark:text-amber-200 block mb-1'>
+                                                    {language === 'uz' ? 'Qo‘llanilgan asosiy qoida:' : 'Key rule applied:'}
+                                                </span>
+                                                <Markdown content={ex.ruleSummary} />
                                             </div>
                                         </div>
                                     )}

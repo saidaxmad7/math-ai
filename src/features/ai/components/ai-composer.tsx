@@ -4,6 +4,7 @@ import { Send } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
+import { useLanguage } from '@/i18n/language-context';
 
 type AIComposerProps = {
     value: string;
@@ -18,6 +19,8 @@ export function AIComposer({
     onChange,
     onSubmit,
 }: AIComposerProps) {
+    const { translations } = useLanguage();
+
     return (
         <form
             className='space-y-3 rounded-xl border bg-card p-4'
@@ -32,15 +35,17 @@ export function AIComposer({
             <Textarea
                 value={value}
                 onChange={(event) => onChange(event.target.value)}
-                placeholder='Savolingizni yozing...'
+                placeholder={translations.aiChat.inputPlaceholder}
                 rows={4}
                 disabled={isSending}
-                aria-label='AI savoli'
+                aria-label='AI prompt'
             />
             <div className='flex justify-end'>
                 <Button type='submit' disabled={!value.trim() || isSending}>
                     <Send />
-                    {isSending ? 'Yuborilmoqda...' : 'Yuborish'}
+                    {isSending
+                        ? translations.aiChat.sending
+                        : translations.aiChat.send}
                 </Button>
             </div>
         </form>

@@ -5,6 +5,7 @@ import { CheckCircle, XCircle, HelpCircle, Check, RotateCcw, Award } from 'lucid
 import { Markdown } from '@/components/math/markdown';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
+import { useLanguage } from '@/i18n/language-context';
 
 export type PracticeQuestionItem = {
     id: string;
@@ -23,6 +24,7 @@ type InLessonQuizProps = {
 };
 
 export function InLessonQuiz({ questions }: InLessonQuizProps) {
+    const { translations, language } = useLanguage();
     const [selectedAnswers, setSelectedAnswers] = useState<Record<string, string>>({});
     const [checkedQuestions, setCheckedQuestions] = useState<Record<string, boolean>>({});
 
@@ -75,19 +77,25 @@ export function InLessonQuiz({ questions }: InLessonQuizProps) {
                     </div>
                     <div>
                         <h2 className='font-heading text-2xl font-bold tracking-tight text-foreground'>
-                            Mini tekshiruv (Bilimingizni sinang)
+                            {language === 'uz'
+                                ? 'Mini tekshiruv (Bilimingizni sinang)'
+                                : 'Mini Check (Test Your Knowledge)'}
                         </h2>
                         <p className='text-sm text-muted-foreground'>
-                            Darsni qay darajada o‘zlashtirganingizni aniqlovchi tezkor savollar
+                            {language === 'uz'
+                                ? 'Darsni qay darajada o‘zlashtirganingizni aniqlovchi tezkor savollar'
+                                : 'Quick questions to verify your understanding of the lesson'}
                         </p>
                     </div>
                 </div>
 
                 {checkedCount > 0 && (
                     <div className='flex items-center gap-2 rounded-xl border bg-muted/40 px-3.5 py-1.5 text-xs font-semibold'>
-                        <span>Natija:</span>
+                        <span>{language === 'uz' ? 'Natija:' : 'Result:'}</span>
                         <span className='text-emerald-600 dark:text-emerald-400 font-bold'>
-                            {correctCount} / {questions.length} to‘g‘ri
+                            {language === 'uz'
+                                ? `${correctCount} / ${questions.length} to‘g‘ri`
+                                : `${correctCount} of ${questions.length} correct`}
                         </span>
                     </div>
                 )}
@@ -189,7 +197,7 @@ export function InLessonQuiz({ questions }: InLessonQuizProps) {
                                         onClick={() => handleCheckAnswer(q.id)}
                                         className='font-semibold'
                                     >
-                                        Tekshirish
+                                        {translations.lesson.checkAnswer}
                                     </Button>
                                 </div>
                             ) : (
@@ -207,12 +215,16 @@ export function InLessonQuiz({ questions }: InLessonQuizProps) {
                                             {isCorrect ? (
                                                 <>
                                                     <CheckCircle className='h-5 w-5 text-emerald-500' />
-                                                    <span>To‘g‘ri javob! Ajoyib natija.</span>
+                                                    <span>{translations.lesson.correct}</span>
                                                 </>
                                             ) : (
                                                 <>
                                                     <XCircle className='h-5 w-5 text-rose-500' />
-                                                    <span>Noto‘g‘ri javob. To‘g‘ri variant: {q.correctAnswer}</span>
+                                                    <span>
+                                                        {language === 'uz'
+                                                            ? `Noto‘g‘ri javob. To‘g‘ri variant: ${q.correctAnswer}`
+                                                            : `Incorrect answer. Correct option: ${q.correctAnswer}`}
+                                                    </span>
                                                 </>
                                             )}
                                         </div>
@@ -224,7 +236,7 @@ export function InLessonQuiz({ questions }: InLessonQuizProps) {
                                             className='h-7 gap-1 text-xs'
                                         >
                                             <RotateCcw className='h-3.5 w-3.5' />
-                                            <span>Qayta ishlash</span>
+                                            <span>{language === 'uz' ? 'Qayta ishlash' : 'Try Again'}</span>
                                         </Button>
                                     </div>
 
@@ -232,7 +244,7 @@ export function InLessonQuiz({ questions }: InLessonQuizProps) {
                                     {q.explanation && (
                                         <div className='rounded-xl border bg-muted/30 p-4 text-sm text-foreground/90 space-y-1.5'>
                                             <span className='font-semibold text-primary block'>
-                                                📖 Tushuntirish va yechim:
+                                                {language === 'uz' ? '📖 Tushuntirish va yechim:' : '📖 Explanation & solution:'}
                                             </span>
                                             <Markdown content={q.explanation} />
                                         </div>
@@ -241,7 +253,7 @@ export function InLessonQuiz({ questions }: InLessonQuizProps) {
                                     {/* Hint if exists and user made error */}
                                     {!isCorrect && q.hint && (
                                         <div className='rounded-xl border border-amber-500/30 bg-amber-500/10 p-3 text-xs text-amber-800 dark:text-amber-200'>
-                                            <span className='font-bold'>💡 Eslatma: </span>
+                                            <span className='font-bold'>{language === 'uz' ? '💡 Eslatma: ' : '💡 Note: '}</span>
                                             {q.hint}
                                         </div>
                                     )}

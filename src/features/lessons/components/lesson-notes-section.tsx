@@ -1,10 +1,11 @@
 'use client';
 
 import { useState } from 'react';
-import { PenLine, ChevronDown, ChevronUp, BookMarked } from 'lucide-react';
+import { PenLine, ChevronDown, ChevronUp } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { NoteEditor } from '@/components/notes/NoteEditor';
 import { NotesList } from '@/components/notes/NotesList';
+import { useLanguage } from '@/i18n/language-context';
 
 type LessonNotesSectionProps = {
     lessonId: string;
@@ -12,6 +13,7 @@ type LessonNotesSectionProps = {
 
 export function LessonNotesSection({ lessonId }: LessonNotesSectionProps) {
     const [isOpen, setIsOpen] = useState(false);
+    const { translations, language } = useLanguage();
 
     return (
         <section className='overflow-hidden rounded-2xl border bg-card shadow-xs transition-all'>
@@ -25,10 +27,14 @@ export function LessonNotesSection({ lessonId }: LessonNotesSectionProps) {
                     </div>
                     <div>
                         <h3 className='font-heading text-lg font-semibold text-foreground'>
-                            Mavzu bo‘yicha shaxsiy konspekt va eslatmalar
+                            {language === 'uz'
+                                ? 'Mavzu bo‘yicha shaxsiy konspekt va eslatmalar'
+                                : 'Personal Study Notes & Key Formulas'}
                         </h3>
                         <p className='text-xs text-muted-foreground'>
-                            O‘zingiz uchun muhim qoidalar yoki eslab qolish lozim bo‘lgan formulalarni yozib qo‘ying
+                            {language === 'uz'
+                                ? 'O‘zingiz uchun muhim qoidalar yoki eslab qolish lozim bo‘lgan formulalarni yozib qo‘ying'
+                                : 'Jot down important rules, formulas, or reminders for quick reference'}
                         </p>
                     </div>
                 </div>
@@ -42,7 +48,11 @@ export function LessonNotesSection({ lessonId }: LessonNotesSectionProps) {
                         setIsOpen(!isOpen);
                     }}
                 >
-                    <span>{isOpen ? 'Yopish' : 'Konspekt yozish'}</span>
+                    <span>
+                        {isOpen
+                            ? translations.common.close
+                            : translations.lesson.addNote}
+                    </span>
                     {isOpen ? <ChevronUp className='h-4 w-4' /> : <ChevronDown className='h-4 w-4' />}
                 </Button>
             </div>
@@ -51,14 +61,14 @@ export function LessonNotesSection({ lessonId }: LessonNotesSectionProps) {
                 <div className='border-t bg-muted/10 p-5 space-y-6 animate-in fade-in-50 duration-200'>
                     <div>
                         <h4 className='text-sm font-semibold text-foreground mb-3'>
-                            Yangi eslatma qo‘shish:
+                            {language === 'uz' ? 'Yangi eslatma qo‘shish:' : 'Add new note:'}
                         </h4>
                         <NoteEditor lessonId={lessonId} />
                     </div>
 
                     <div className='pt-2'>
                         <h4 className='text-sm font-semibold text-foreground mb-3'>
-                            Saqlangan eslatmalaringiz:
+                            {language === 'uz' ? 'Saqlangan eslatmalaringiz:' : 'Your saved notes:'}
                         </h4>
                         <NotesList lessonId={lessonId} />
                     </div>

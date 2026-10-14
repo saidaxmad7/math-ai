@@ -4,6 +4,7 @@ import { Check, Loader2 } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
 import { useCompleteLesson, useProgress } from '@/hooks/use-progress';
+import { useLanguage } from '@/i18n/language-context';
 
 type CompleteLessonButtonProps = {
     lessonId: string;
@@ -12,6 +13,7 @@ type CompleteLessonButtonProps = {
 export function CompleteLessonButton({ lessonId }: CompleteLessonButtonProps) {
     const { data: progresses = [] } = useProgress();
     const { mutate, isPending } = useCompleteLesson();
+    const { translations } = useLanguage();
 
     const completed = progresses.some(
         (progress) => progress.lessonId === lessonId && progress.completed,
@@ -25,15 +27,15 @@ export function CompleteLessonButton({ lessonId }: CompleteLessonButtonProps) {
             {isPending ? (
                 <>
                     <Loader2 className='mr-2 h-4 w-4 animate-spin' />
-                    Saqlanmoqda...
+                    {translations.common.loading}
                 </>
             ) : completed ? (
                 <>
                     <Check className='mr-2 h-4 w-4' />
-                    Tugallangan
+                    {translations.lesson.completedBadge}
                 </>
             ) : (
-                'Darsni tugatish'
+                translations.lesson.completeLesson
             )}
         </Button>
     );

@@ -15,11 +15,14 @@ import {
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
+import { LanguageSwitcher } from '@/components/common/language-switcher';
+import { useLanguage } from '@/i18n/language-context';
 
 function LoginForm() {
     const router = useRouter();
     const searchParams = useSearchParams();
     const errorParam = searchParams.get('error');
+    const { translations, language } = useLanguage();
 
     const [email, setEmail] = useState('');
     const [isLoading, setIsLoading] = useState(false);
@@ -57,7 +60,7 @@ function LoginForm() {
                     <div className='space-y-1 text-center'>
                         <h1 className='text-2xl font-bold'>Math AI</h1>
                         <p className='text-xs text-muted-foreground'>
-                            Matematika va Geometriyani AI bilan o&apos;rganish
+                            {translations.common.tagline}
                         </p>
                     </div>
                 </div>
@@ -66,11 +69,17 @@ function LoginForm() {
                     <div className='flex w-full items-start gap-2 rounded-xl border border-destructive/30 bg-destructive/10 p-3 text-xs text-destructive'>
                         <AlertCircle className='mt-0.5 h-4 w-4 shrink-0' />
                         <div>
-                            <p className='font-semibold'>Kirishda muammo yuz berdi</p>
+                            <p className='font-semibold'>
+                                {language === 'uz' ? 'Kirishda muammo yuz berdi' : 'Sign in error'}
+                            </p>
                             <p className='text-muted-foreground'>
                                 {errorParam === 'Configuration'
-                                    ? 'Google OAuth sozlamalari yangilandi. Quyidagi tezkor kirish tugmasidan ham foydalanishingiz mumkin.'
-                                    : 'Iltimos, qaytadan urinib ko‘ring.'}
+                                    ? (language === 'uz'
+                                        ? 'Google OAuth sozlamalari yangilandi. Quyidagi tezkor kirish tugmasidan ham foydalanishingiz mumkin.'
+                                        : 'OAuth configuration updated. You can also use the quick sign in below.')
+                                    : (language === 'uz'
+                                        ? 'Iltimos, qaytadan urinib ko‘ring.'
+                                        : 'Please try again.')}
                             </p>
                         </div>
                     </div>
@@ -101,7 +110,7 @@ function LoginForm() {
                             d='M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z'
                         />
                     </svg>
-                    Google orqali kirish
+                    {language === 'uz' ? 'Google orqali kirish' : 'Sign in with Google'}
                 </Button>
 
                 <div className='relative flex w-full items-center justify-center'>
@@ -109,7 +118,7 @@ function LoginForm() {
                         <span className='w-full border-t' />
                     </div>
                     <span className='relative bg-card px-2 text-xs uppercase text-muted-foreground'>
-                        Yoki tezkor kirish
+                        {language === 'uz' ? 'Yoki tezkor kirish' : 'Or quick sign in'}
                     </span>
                 </div>
 
@@ -122,7 +131,9 @@ function LoginForm() {
                     >
                         <div className='flex items-center gap-2'>
                             <User className='h-4 w-4' />
-                            <span>O&apos;quvchi sifatida kirish</span>
+                            <span>
+                                {language === 'uz' ? 'O‘quvchi sifatida kirish' : 'Sign in as Student'}
+                            </span>
                         </div>
                         <ArrowRight className='h-4 w-4' />
                     </Button>
@@ -135,7 +146,9 @@ function LoginForm() {
                     >
                         <div className='flex items-center gap-2'>
                             <ShieldCheck className='h-4 w-4 text-primary' />
-                            <span>Admin (O&apos;qituvchi) sifatida kirish</span>
+                            <span>
+                                {language === 'uz' ? 'Admin (O‘qituvchi) sifatida kirish' : 'Sign in as Admin (Teacher)'}
+                            </span>
                         </div>
                         <ArrowRight className='h-4 w-4' />
                     </Button>
@@ -144,12 +157,12 @@ function LoginForm() {
                 {/* Custom Email Input */}
                 <div className='w-full space-y-2 pt-2 border-t'>
                     <label className='text-xs text-muted-foreground'>
-                        Boshqa email orqali kirish:
+                        {language === 'uz' ? 'Boshqa email orqali kirish:' : 'Sign in with custom email:'}
                     </label>
                     <div className='flex gap-2'>
                         <Input
                             type='email'
-                            placeholder='email@misol.uz'
+                            placeholder='email@example.com'
                             value={email}
                             onChange={(e) => setEmail(e.target.value)}
                             disabled={isLoading}
@@ -161,7 +174,7 @@ function LoginForm() {
                             {isLoading ? (
                                 <Loader2 className='h-4 w-4 animate-spin' />
                             ) : (
-                                'Kirish'
+                                translations.common.login
                             )}
                         </Button>
                     </div>
@@ -173,8 +186,11 @@ function LoginForm() {
 
 export default function LoginPage() {
     return (
-        <main className='flex min-h-screen items-center justify-center bg-background px-6'>
-            <Suspense fallback={<div>Yuklanmoqda...</div>}>
+        <main className='relative flex min-h-screen flex-col items-center justify-center bg-background px-6'>
+            <div className='absolute top-4 right-4 z-10'>
+                <LanguageSwitcher />
+            </div>
+            <Suspense fallback={<div className='text-sm text-muted-foreground'>Yuklanmoqda...</div>}>
                 <LoginForm />
             </Suspense>
         </main>

@@ -29,6 +29,7 @@ function toProviderRole(role: AIMessageRole): AIProviderMessage['role'] {
 function toProviderMessages(
     messages: { role: AIMessageRole; content: string }[],
     context?: string,
+    language: 'uz' | 'en' = 'uz',
 ): AIProviderMessage[] {
     const compactMessages = messages
         .filter(
@@ -44,7 +45,7 @@ function toProviderMessages(
     return [
         {
             role: 'system',
-            content: buildMathTutorPrompt(context),
+            content: buildMathTutorPrompt(context, language),
         },
         ...compactMessages.map((message) => ({
             role: toProviderRole(message.role),
@@ -141,7 +142,7 @@ export async function sendAIMessage(userId: string, input: SendAIMessageInput) {
         { role: AIMessageRole.USER, content: input.content },
     ];
     const content = await aiProvider.generateResponse({
-        messages: toProviderMessages(messages, context),
+        messages: toProviderMessages(messages, context, input.language),
     });
 
     await createMessage({
@@ -185,7 +186,7 @@ export async function* streamAIMessage(
     let content = '';
 
     for await (const token of aiProvider.streamResponse({
-        messages: toProviderMessages(messages, context),
+        messages: toProviderMessages(messages, context, input.language),
     })) {
         content += token;
         yield { type: 'token', content: token };

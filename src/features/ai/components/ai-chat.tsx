@@ -12,8 +12,9 @@ import {
 } from '@/hooks/use-ai';
 import { AIComposer } from '@/features/ai/components/ai-composer';
 import { AIMessageList } from '@/features/ai/components/ai-message-list';
+import { useLanguage } from '@/i18n/language-context';
 
-const SUGGESTED_PROMPTS = [
+const SUGGESTED_PROMPTS_UZ = [
     {
         title: '📐 Pifagor teoremasi',
         prompt: "Pifagor teoremasini va to'g'ri burchakli uchburchakda gipotenuza topish qoidasini misol bilan tushuntirib bering.",
@@ -32,7 +33,27 @@ const SUGGESTED_PROMPTS = [
     },
 ];
 
+const SUGGESTED_PROMPTS_EN = [
+    {
+        title: '📐 Pythagorean Theorem',
+        prompt: 'Explain the Pythagorean theorem and how to calculate the hypotenuse in a right-angled triangle with a clear example.',
+    },
+    {
+        title: '🔢 Quadratic Equations & Vieta',
+        prompt: "Demonstrate how to solve quadratic equations using the discriminant and Vieta's relations with concise formulas.",
+    },
+    {
+        title: '📈 Geometric Meaning of Derivatives',
+        prompt: 'What is a mathematical derivative and what is its geometric meaning on function graphs?',
+    },
+    {
+        title: '🎲 Classical Probability',
+        prompt: 'Solve a sample problem step-by-step using the classical probability formula P(A) = m/n.',
+    },
+];
+
 export function AIChat() {
+    const { translations, language } = useLanguage();
     const [conversationId, setConversationId] = useState<string>();
     const [content, setContent] = useState('');
     const {
@@ -49,6 +70,8 @@ export function AIChat() {
         conversation ??
         conversations.find((item) => item.id === activeConversationId);
 
+    const prompts = language === 'uz' ? SUGGESTED_PROMPTS_UZ : SUGGESTED_PROMPTS_EN;
+
     async function handleSubmit(promptText?: string) {
         const textToSend = (promptText || content).trim();
         if (!textToSend || sendMessage.isPending) return;
@@ -59,12 +82,13 @@ export function AIChat() {
                 content: textToSend,
                 stream: false,
                 contextType: 'CHAT',
+                language,
             });
 
             setConversationId(response.id);
             setContent('');
         } catch (e) {
-            console.error('AI xabari yuborishda xatolik:', e);
+            console.error('AI error:', e);
         }
     }
 
@@ -77,7 +101,7 @@ export function AIChat() {
         return (
             <Card>
                 <CardContent className='py-8 text-sm text-destructive'>
-                    AI suhbatlarini yuklab bo&apos;lmadi.
+                    {translations.aiChat.loadError}
                 </CardContent>
             </Card>
         );
@@ -87,11 +111,13 @@ export function AIChat() {
 
     return (
         <div className='grid gap-6 lg:grid-cols-[280px_1fr]'>
-            {/* Chap panel: Suhbatlar tarixi */}
+            {/* History Panel */}
             <Card className='h-fit shadow-xs'>
                 <CardHeader className='pb-3'>
                     <div className='flex items-center justify-between'>
-                        <CardTitle className='text-base font-semibold'>Suhbatlar tarixi</CardTitle>
+                        <CardTitle className='text-base font-semibold'>
+                            {translations.aiChat.historyTitle}
+                        </CardTitle>
                         <Button
                             variant='outline'
                             size='sm'
@@ -99,7 +125,7 @@ export function AIChat() {
                             onClick={handleStartNewChat}
                         >
                             <MessageSquarePlus className='size-3.5' />
-                            Yangi
+                            {translations.aiChat.newChat}
                         </Button>
                     </div>
                 </CardHeader>
@@ -107,11 +133,11 @@ export function AIChat() {
                     {isConversationsLoading ? (
                         <div className='flex items-center gap-2 py-4 text-xs text-muted-foreground'>
                             <Loader2 className='size-3.5 animate-spin' />
-                            Yuklanmoqda...
+                            {translations.aiChat.loading}
                         </div>
                     ) : conversations.length === 0 ? (
                         <p className='py-4 text-xs text-muted-foreground text-center'>
-                            Hali suhbatlar yo&apos;q.
+                            {translations.aiChat.emptyHistory}
                         </p>
                     ) : (
                         <div className='max-h-[500px] overflow-y-auto space-y-1 pr-1'>
@@ -126,7 +152,7 @@ export function AIChat() {
                                     }`}
                                     onClick={() => setConversationId(item.id)}
                                 >
-                                    {item.title ?? 'Yangi suhbat'}
+                                    {item.title ?? translations.aiChat.newChatDefaultTitle}
                                 </button>
                             ))}
                         </div>
@@ -134,17 +160,17 @@ export function AIChat() {
                 </CardContent>
             </Card>
 
-            {/* O'ng panel: Chat va Savollar */}
+            {/* Chat & Prompts */}
             <div className='space-y-6'>
-                {/* Tavsiya etilgan namunaviy savollar (agar chat bo'sh bo'lsa) */}
+                {/* Suggested Prompts */}
                 {currentMessages.length === 0 && (
                     <div className='space-y-3'>
                         <div className='flex items-center gap-2 text-xs font-semibold text-muted-foreground uppercase tracking-wider'>
                             <Sparkles className='size-3.5 text-primary' />
-                            Tezkor namunaviy savollar
+                            {translations.aiChat.suggestedPromptsTitle}
                         </div>
                         <div className='grid gap-2 sm:grid-cols-2'>
-                            {SUGGESTED_PROMPTS.map((item, idx) => (
+                            {prompts.map((item, idx) => (
                                 <button
                                     key={idx}
                                     type='button'
@@ -170,13 +196,13 @@ export function AIChat() {
                 {sendMessage.isPending && (
                     <div className='flex items-center gap-2 rounded-xl border bg-card px-4 py-3 text-xs text-muted-foreground animate-pulse'>
                         <Bot className='size-4 text-primary animate-spin' />
-                        AI matematika yordamchisi javob tayyorlamoqda...
+                        {translations.aiChat.thinking}
                     </div>
                 )}
 
                 {sendMessage.isError && (
                     <p className='text-xs text-destructive rounded-lg border border-destructive/20 bg-destructive/10 p-3'>
-                        Xatolik: {sendMessage.error.message || 'AI javob berishda xatolik yuz berdi.'}
+                        {sendMessage.error.message || 'Error occurred.'}
                     </p>
                 )}
 

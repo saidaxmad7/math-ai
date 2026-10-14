@@ -6,41 +6,37 @@ import {
     Brain,
     ChartColumn,
     Sparkles,
-    type LucideIcon,
 } from "lucide-react";
 
 import { Container } from "@/components/common/container";
-
-type FeatureItem = {
-    icon: LucideIcon;
-    title: string;
-    description: string;
-};
-
-const features: FeatureItem[] = [
-    {
-        icon: Brain,
-        title: "9–11-sinflar",
-        description: "Barcha matematika mavzulari.",
-    },
-    {
-        icon: Sparkles,
-        title: "AI mashqlar",
-        description: "Cheksiz AI yaratgan misollar.",
-    },
-    {
-        icon: ChartColumn,
-        title: "Rivojlanishni kuzatish",
-        description: "Statistika va natijalar.",
-    },
-    {
-        icon: BookOpen,
-        title: "AI yordamchi",
-        description: "Har bir mavzuni tushuntiruvchi AI.",
-    },
-];
+import { useLanguage } from "@/i18n/language-context";
 
 export function Features() {
+    const { translations } = useLanguage();
+
+    const features = [
+        {
+            icon: Brain,
+            title: translations.landing.gradesFeatureTitle,
+            description: translations.landing.gradesFeatureDesc,
+        },
+        {
+            icon: Sparkles,
+            title: translations.landing.aiPracticeFeatureTitle,
+            description: translations.landing.aiPracticeFeatureDesc,
+        },
+        {
+            icon: ChartColumn,
+            title: translations.landing.progressFeatureTitle,
+            description: translations.landing.progressFeatureDesc,
+        },
+        {
+            icon: BookOpen,
+            title: translations.landing.tutorFeatureTitle,
+            description: translations.landing.tutorFeatureDesc,
+        },
+    ];
+
     return (
         <section id='features' className='relative py-24 sm:py-28'>
             <div className='absolute inset-0 -z-10 bg-[radial-gradient(circle_at_top,rgba(139,92,246,0.16),transparent_40%)]' />
@@ -48,10 +44,10 @@ export function Features() {
             <Container>
                 <div className='mx-auto max-w-3xl text-center'>
                     <p className='text-sm font-semibold uppercase tracking-[0.3em] text-violet-300'>
-                        Imkoniyatlar
+                        {translations.landing.featuresSubtitle}
                     </p>
                     <h2 className='mt-3 text-3xl font-semibold tracking-tight text-white sm:text-4xl'>
-                        O&apos;zingizga mos ta&apos;lim muhiti
+                        {translations.landing.featuresTitle}
                     </h2>
                 </div>
 
@@ -72,6 +68,7 @@ export function Features() {
                                 transition={{
                                     duration: 0.35,
                                     delay: index * 0.05,
+                                    ease: "easeOut",
                                 }}
                                 className='group rounded-[1.75rem] border border-white/10 bg-white/5 p-6 shadow-[0_20px_80px_rgba(2,6,23,0.32)] backdrop-blur-xl transition-all duration-300 hover:border-violet-400/40 hover:shadow-[0_24px_90px_rgba(139,92,246,0.24)]'
                             >

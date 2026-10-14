@@ -1,5 +1,8 @@
+'use client';
+
 import Link from "next/link";
 import { ChevronRight, BookOpen } from "lucide-react";
+import { useLanguage } from "@/i18n/language-context";
 
 type TopicCardProps = {
     gradeId: string;
@@ -20,6 +23,7 @@ export function TopicCard({
     lessonSlug,
     order,
 }: TopicCardProps) {
+    const { language } = useLanguage();
     const destination = lessonSlug
         ? `/dashboard/lessons/${lessonSlug}`
         : `/dashboard/grades/${gradeId}/subjects/${subjectId}/topics/${id}`;
@@ -56,7 +60,9 @@ export function TopicCard({
 
             <div className='mt-4 flex items-center gap-2 pt-3 border-t text-xs font-medium text-primary'>
                 <BookOpen className='h-3.5 w-3.5' />
-                <span>Darsni o‘rganish</span>
+                <span>
+                    {language === 'uz' ? 'Darsni o‘rganish' : 'Explore Lesson'}
+                </span>
             </div>
         </Link>
     );

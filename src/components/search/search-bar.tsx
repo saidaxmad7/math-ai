@@ -7,6 +7,7 @@ import { useQuery } from "@tanstack/react-query";
 import { Search, BookOpen, Layers } from "lucide-react";
 
 import { Input } from "@/components/ui/input";
+import { useLanguage } from "@/i18n/language-context";
 
 type SearchTopic = {
     id: string;
@@ -58,6 +59,7 @@ async function searchRequest(query: string): Promise<SearchResponse> {
 }
 
 export function SearchBar() {
+    const { translations, language } = useLanguage();
     const pathname = usePathname();
     const containerRef = useRef<HTMLDivElement>(null);
 
@@ -130,7 +132,7 @@ export function SearchBar() {
             <Input
                 value={query}
                 onChange={(event) => setQuery(event.target.value)}
-                placeholder='Mavzu yoki dars qidiring...'
+                placeholder={translations.common.search}
                 className='pl-10 h-10 rounded-xl'
             />
 
@@ -138,13 +140,13 @@ export function SearchBar() {
                 <div className='absolute top-full z-50 mt-2 max-h-[380px] w-full overflow-y-auto rounded-xl border bg-card shadow-xl animate-in fade-in-50 duration-150'>
                     {isLoading && (
                         <p className='p-4 text-center text-sm text-muted-foreground'>
-                            Qidirilmoqda...
+                            {translations.common.searching}
                         </p>
                     )}
 
                     {!isLoading && !hasResults && (
                         <p className='p-4 text-center text-sm text-muted-foreground'>
-                            Hech narsa topilmadi
+                            {translations.common.noResults}
                         </p>
                     )}
 
@@ -152,7 +154,7 @@ export function SearchBar() {
                         <>
                             <div className='flex items-center gap-1.5 border-b bg-muted/60 px-3.5 py-2 text-[11px] font-bold uppercase tracking-wider text-muted-foreground'>
                                 <Layers className='h-3.5 w-3.5 text-primary' />
-                                <span>Mavzular</span>
+                                <span>{language === 'uz' ? 'Mavzular' : 'Topics'}</span>
                             </div>
 
                             {topics.map((topic) => {
@@ -187,7 +189,7 @@ export function SearchBar() {
                         <>
                             <div className='flex items-center gap-1.5 border-b bg-muted/60 px-3.5 py-2 text-[11px] font-bold uppercase tracking-wider text-muted-foreground'>
                                 <BookOpen className='h-3.5 w-3.5 text-primary' />
-                                <span>Darslar</span>
+                                <span>{language === 'uz' ? 'Darslar' : 'Lessons'}</span>
                             </div>
 
                             {lessons.map((lesson) => (

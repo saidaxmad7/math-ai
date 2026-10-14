@@ -3,6 +3,7 @@
 import { signOut, useSession } from "next-auth/react";
 import { Bell, LogOut, Menu } from "lucide-react";
 import { ThemeToggle } from "@/components/theme/theme-toggle";
+import { LanguageSwitcher } from "@/components/common/language-switcher";
 import { SearchBar } from "@/components/search/search-bar";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -33,6 +34,8 @@ export function Header() {
             </div>
 
             <div className="flex items-center gap-3">
+                <LanguageSwitcher />
+
                 <ThemeToggle />
 
                 <Button variant="ghost" size="icon">

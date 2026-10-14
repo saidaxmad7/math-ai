@@ -1,11 +1,12 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Bot, Send, Sparkles, User, RefreshCw, MessageSquare } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Markdown } from '@/components/math/markdown';
 import { cn } from '@/lib/utils';
+import { useLanguage } from '@/i18n/language-context';
 
 type InLessonAITutorProps = {
     lessonId: string;
@@ -25,22 +26,49 @@ export function InLessonAITutor({
     gradeName,
     subjectName,
 }: InLessonAITutorProps) {
+    const { translations, language } = useLanguage();
+
+    const getGreeting = (lang: 'uz' | 'en') =>
+        lang === 'uz'
+            ? `Salom! Men sizning **${gradeName} ${subjectName}** bo‘yicha AI ustozingizman. **«${lessonTitle}»** mavzusida tushunmagan biron bir joyingiz bormi? Quyidagi tayyor savollardan birini tanlashingiz yoki o‘z savolingizni yozishingiz mumkin!`
+            : `Hello! I am your AI math tutor for **${gradeName} ${subjectName}**. Do you have any questions regarding **"${lessonTitle}"**? Pick one of the suggested prompts below or ask anything!`;
+
     const [messages, setMessages] = useState<Message[]>([
         {
             role: 'assistant',
-            content: `Salom! Men sizning **${gradeName} ${subjectName}** bo‘yicha AI ustozingizman. **«${lessonTitle}»** mavzusida tushunmagan biron bir joyingiz bormi? Quyidagi tayyor savollardan birini tanlashingiz yoki o‘z savolingizni yozishingiz mumkin!`,
+            content: getGreeting(language),
         },
     ]);
     const [input, setInput] = useState('');
     const [isLoading, setIsLoading] = useState(false);
     const [conversationId, setConversationId] = useState<string | undefined>();
 
-    const promptChips = [
-        `💡 Bu mavzuni eng oddiy hayotiy misol bilan tushuntir`,
-        `📐 Formulaning har bir belgisini soddaroq izohlab ber`,
-        `⚠️ Bu mavzuda eng ko‘p qilinadigan xatolar qaysilar?`,
-        `✍️ Menga qadam-baqadam yechiladigan yana 1 ta oson misol ko‘rsat`,
-    ];
+    // Update greeting if language changes and chat hasn't started yet
+    useEffect(() => {
+        if (messages.length <= 1) {
+            setMessages([
+                {
+                    role: 'assistant',
+                    content: getGreeting(language),
+                },
+            ]);
+        }
+    }, [language]);
+
+    const promptChips =
+        language === 'uz'
+            ? [
+                  `💡 Bu mavzuni eng oddiy hayotiy misol bilan tushuntir`,
+                  `📐 Formulaning har bir belgisini soddaroq izohlab ber`,
+                  `⚠️ Bu mavzuda eng ko‘p qilinadigan xatolar qaysilar?`,
+                  `✍️ Menga qadam-baqadam yechiladigan yana 1 ta oson misol ko‘rsat`,
+              ]
+            : [
+                  `💡 Explain this topic with a simple real-life example`,
+                  `📐 Explain each symbol in the formula step by step`,
+                  `⚠️ What are the most common mistakes in this topic?`,
+                  `✍️ Show me another step-by-step example`,
+              ];
 
     const sendMessage = async (textToSend: string) => {
         const text = textToSend.trim();
@@ -58,25 +86,26 @@ export function InLessonAITutor({
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({
-                    content: text,
                     conversationId,
+                    content: text,
                     contextType: 'LESSON',
                     contextId: lessonId,
-                    stream: false,
+                    language,
                 }),
             });
 
             if (!res.ok) {
-                throw new Error('AI javob berishda xatolik yuz berdi.');
+                throw new Error('AI javob bera olmadi');
             }
 
             const data = await res.json();
             const reply =
                 data.data?.messages?.[data.data.messages.length - 1]?.content ||
-                data.data?.message?.content ||
-                'Kechirasiz, javobni qayta ishlashda muammo bo‘ldi.';
+                (language === 'uz'
+                    ? 'Javob qabul qilindi, ammo matn bo‘sh bo‘ldi.'
+                    : 'Response received but content was empty.');
 
-            if (data.data?.id) {
+            if (data.data?.id && !conversationId) {
                 setConversationId(data.data.id);
             }
 
@@ -87,7 +116,9 @@ export function InLessonAITutor({
                 {
                     role: 'assistant',
                     content:
-                        'Kechirasiz, tizimda vaqtinchalik xatolik yuz berdi. Iltimos, qaytadan urinib ko‘ring.',
+                        language === 'uz'
+                            ? 'Kechirasiz, tizimda vaqtinchalik xatolik yuz berdi. Iltimos, qaytadan urinib ko‘ring.'
+                            : 'Sorry, a temporary error occurred. Please try again.',
                 },
             ]);
         } finally {
@@ -104,14 +135,18 @@ export function InLessonAITutor({
                 <div>
                     <div className='flex items-center gap-2'>
                         <h2 className='font-heading text-2xl font-bold tracking-tight text-foreground'>
-                            AI Ustoz bilan tushunmagan joyni so‘rang
+                            {language === 'uz'
+                                ? 'AI Ustoz bilan tushunmagan joyni so‘rang'
+                                : 'Ask AI Tutor to explain anything'}
                         </h2>
                         <span className='rounded-full bg-violet-500/10 px-2 py-0.5 text-[11px] font-semibold text-violet-600 dark:text-violet-400'>
                             Gemini 3.8 Flash
                         </span>
                     </div>
                     <p className='text-sm text-muted-foreground'>
-                        «Bu joyini tushunmadim» desangiz, AI butun darsni emas, aynan shu qismini yanada sodda tilda tushuntirib beradi.
+                        {language === 'uz'
+                            ? '«Bu joyini tushunmadim» desangiz, AI butun darsni emas, aynan shu qismini yanada sodda tilda tushuntirib beradi.'
+                            : 'Say "I didn\'t understand this part" and the AI will simplify that specific concept step by step.'}
                     </p>
                 </div>
             </div>
@@ -174,7 +209,11 @@ export function InLessonAITutor({
                             </div>
                             <div className='flex items-center gap-2 rounded-2xl border bg-muted/30 px-4 py-2.5 text-xs text-muted-foreground'>
                                 <RefreshCw className='h-3.5 w-3.5 animate-spin text-violet-500' />
-                                <span>AI ustoz dars asosida javob tayyorlamoqda...</span>
+                                <span>
+                                    {language === 'uz'
+                                        ? 'AI ustoz dars asosida javob tayyorlamoqda...'
+                                        : 'AI tutor is preparing an explanation...'}
+                                </span>
                             </div>
                         </div>
                     )}
@@ -191,7 +230,11 @@ export function InLessonAITutor({
                     <Input
                         value={input}
                         onChange={(e) => setInput(e.target.value)}
-                        placeholder='Masalan: «Nega diskriminant 0 dan kichik bo‘lsa ildiz yo‘q?» yoki «Qavslarni qanday qo‘yish kerak?»'
+                        placeholder={
+                            language === 'uz'
+                                ? 'Masalan: «Nega diskriminant 0 dan kichik bo‘lsa ildiz yo‘q?» yoki «Qavslarni qanday ochish kerak?»'
+                                : 'e.g. "Why is there no real root if discriminant is negative?" or "How do I factor this?"'
+                        }
                         disabled={isLoading}
                         className='h-11 rounded-xl bg-background text-sm'
                     />
@@ -200,7 +243,7 @@ export function InLessonAITutor({
                         disabled={!input.trim() || isLoading}
                         className='h-11 px-4 rounded-xl gap-2 font-medium shrink-0'
                     >
-                        <span>Yuborish</span>
+                        <span>{translations.lesson.send}</span>
                         <Send className='h-4 w-4' />
                     </Button>
                 </form>

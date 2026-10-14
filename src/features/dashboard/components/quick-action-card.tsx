@@ -1,6 +1,9 @@
+'use client';
+
 import Link from "next/link";
 import { ArrowRight, LucideIcon } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
+import { useLanguage } from "@/i18n/language-context";
 
 type QuickActionCardProps = {
     title: string;
@@ -15,6 +18,8 @@ export function QuickActionCard({
     href,
     icon: Icon,
 }: QuickActionCardProps) {
+    const { language } = useLanguage();
+
     return (
         <Link href={href}>
             <Card className='h-full transition-all duration-200 hover:-translate-y-1 hover:shadow-lg'>
@@ -34,7 +39,7 @@ export function QuickActionCard({
                     </div>
 
                     <div className='mt-6 flex items-center gap-2 text-sm font-medium text-primary'>
-                        <span>Open</span>
+                        <span>{language === 'uz' ? "O'tish" : "Open"}</span>
                         <ArrowRight className='h-4 w-4' />
                     </div>
                 </CardContent>

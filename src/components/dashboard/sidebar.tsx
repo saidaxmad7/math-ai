@@ -18,67 +18,69 @@ import {
 
 import { cn } from "@/lib/utils";
 import { useSidebarStore } from "@/store/sidebar-store";
-
-const standardLinks = [
-    {
-        title: "Dashboard",
-        href: "/dashboard",
-        icon: Home,
-    },
-    {
-        title: "Classes",
-        href: "/dashboard/classes",
-        icon: GraduationCap,
-    },
-    {
-        title: "Subjects",
-        href: "/dashboard/subjects",
-        icon: BookOpen,
-    },
-    {
-        title: "Bookmarks",
-        href: "/dashboard/bookmarks",
-        icon: Bookmark,
-    },
-    {
-        title: "AI Practice",
-        href: "/dashboard/practice",
-        icon: Brain,
-    },
-    {
-        title: "AI Yordamchi",
-        href: "/dashboard/ai",
-        icon: MessageCircle,
-    },
-    {
-        title: "Statistics",
-        href: "/dashboard/statistics",
-        icon: ChartColumn,
-    },
-    {
-        title: "Settings",
-        href: "/dashboard/settings",
-        icon: Settings,
-    },
-];
-
-const adminOnlyLinks = [
-    {
-        title: "Admin Panel",
-        href: "/dashboard/admin",
-        icon: ShieldCheck,
-    },
-    {
-        title: "Kitoblar (Admin)",
-        href: "/dashboard/admin/books",
-        icon: Library,
-    },
-];
+import { useLanguage } from "@/i18n/language-context";
 
 export function Sidebar() {
     const pathname = usePathname();
     const { collapsed } = useSidebarStore();
     const { data: session } = useSession();
+    const { translations } = useLanguage();
+
+    const standardLinks = [
+        {
+            title: translations.navigation.dashboard,
+            href: "/dashboard",
+            icon: Home,
+        },
+        {
+            title: translations.navigation.classes,
+            href: "/dashboard/classes",
+            icon: GraduationCap,
+        },
+        {
+            title: translations.navigation.subjects,
+            href: "/dashboard/subjects",
+            icon: BookOpen,
+        },
+        {
+            title: translations.navigation.bookmarks,
+            href: "/dashboard/bookmarks",
+            icon: Bookmark,
+        },
+        {
+            title: translations.navigation.practice,
+            href: "/dashboard/practice",
+            icon: Brain,
+        },
+        {
+            title: translations.navigation.aiAssistant,
+            href: "/dashboard/ai",
+            icon: MessageCircle,
+        },
+        {
+            title: translations.navigation.statistics,
+            href: "/dashboard/statistics",
+            icon: ChartColumn,
+        },
+        {
+            title: translations.navigation.settings,
+            href: "/dashboard/settings",
+            icon: Settings,
+        },
+    ];
+
+    const adminOnlyLinks = [
+        {
+            title: translations.navigation.adminPanel,
+            href: "/dashboard/admin",
+            icon: ShieldCheck,
+        },
+        {
+            title: translations.navigation.adminBooks,
+            href: "/dashboard/admin/books",
+            icon: Library,
+        },
+    ];
 
     const isAdmin = session?.user?.role === 'ADMIN';
     const allLinks = isAdmin
@@ -105,11 +107,11 @@ export function Sidebar() {
                     {!collapsed && (
                         <div>
                             <h2 className='font-heading text-xl font-bold'>
-                                Math AI
+                                {translations.common.appName}
                             </h2>
 
                             <p className='text-sm text-muted-foreground'>
-                                AI Learning Platform
+                                {translations.common.tagline}
                             </p>
                         </div>
                     )}

@@ -15,21 +15,8 @@ import {
 import { Container } from "@/components/common/container";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
-
-const navItems = [
-    {
-        label: "Imkoniyatlar",
-        href: "#features",
-    },
-    {
-        label: "Sinflar",
-        href: "#grades",
-    },
-    {
-        label: "Afzalliklar",
-        href: "#advantages",
-    },
-];
+import { useLanguage } from "@/i18n/language-context";
+import { LanguageSwitcher } from "@/components/common/language-switcher";
 
 function getUserInitials(name?: string | null, email?: string | null): string {
     if (name) {
@@ -50,6 +37,7 @@ function getUserInitials(name?: string | null, email?: string | null): string {
 }
 
 export function Navbar() {
+    const { translations } = useLanguage();
     const { data: session, status } = useSession();
     const user = session?.user;
     const displayName = user?.name ?? user?.email?.split("@")[0] ?? "User";
@@ -57,6 +45,21 @@ export function Navbar() {
     const [isOpen, setIsOpen] = useState(false);
     const triggerRef = useRef<HTMLButtonElement | null>(null);
     const panelRef = useRef<HTMLDivElement | null>(null);
+
+    const navItems = [
+        {
+            label: translations.landing.features,
+            href: "#features",
+        },
+        {
+            label: translations.landing.grades,
+            href: "#grades",
+        },
+        {
+            label: translations.landing.advantages,
+            href: "#advantages",
+        },
+    ];
 
     useEffect(() => {
         if (!isOpen) {
@@ -124,6 +127,8 @@ export function Navbar() {
                 </nav>
 
                 <div className='flex items-center gap-3'>
+                    <LanguageSwitcher />
+
                     {status === "loading" ? (
                         <div className='h-9 w-24 animate-pulse rounded-full bg-muted/70' />
                     ) : status === "authenticated" && user ? (
@@ -193,21 +198,21 @@ export function Navbar() {
                                                 className='flex items-center gap-3 rounded-2xl px-3 py-2 text-sm text-white transition-colors duration-150 hover:bg-white/5'
                                             >
                                                 <LayoutDashboard className='h-4 w-4 text-muted-foreground' />
-                                                Dashboard
+                                                {translations.navigation.dashboard}
                                             </Link>
                                             <Link
-                                                href='/dashboard'
+                                                href='/dashboard/settings'
                                                 className='flex items-center gap-3 rounded-2xl px-3 py-2 text-sm text-white transition-colors duration-150 hover:bg-white/5'
                                             >
                                                 <UserCircle2 className='h-4 w-4 text-muted-foreground' />
-                                                Profil
+                                                {translations.common.profile}
                                             </Link>
                                             <Link
                                                 href='/dashboard/settings'
                                                 className='flex items-center gap-3 rounded-2xl px-3 py-2 text-sm text-white transition-colors duration-150 hover:bg-white/5'
                                             >
                                                 <Settings className='h-4 w-4 text-muted-foreground' />
-                                                Sozlamalar
+                                                {translations.common.settings}
                                             </Link>
                                         </div>
 
@@ -222,7 +227,7 @@ export function Navbar() {
                                                 className='flex w-full items-center justify-center gap-2 rounded-2xl border border-destructive/20 bg-destructive/10 px-3 py-2 text-sm font-semibold text-destructive transition-all duration-150 hover:bg-destructive/20 focus:outline-none focus:ring-2 focus:ring-destructive/30'
                                             >
                                                 <LogOut className='h-4 w-4' />
-                                                Chiqish
+                                                {translations.common.logout}
                                             </button>
                                         </div>
                                     </div>
@@ -235,7 +240,7 @@ export function Navbar() {
                                 size='sm'
                                 className='rounded-full bg-linear-to-r from-violet-500 via-fuchsia-500 to-indigo-500 px-5 text-sm font-semibold text-white shadow-lg shadow-violet-950/30 transition-all duration-200 hover:-translate-y-0.5'
                             >
-                                Kirish
+                                {translations.common.login}
                             </Button>
                         </Link>
                     )}

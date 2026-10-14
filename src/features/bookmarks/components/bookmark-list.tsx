@@ -6,11 +6,13 @@ import { BookmarkIcon, RefreshCw } from "lucide-react";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useBookmarks } from "@/features/bookmarks/hooks/use-bookmarks";
+import { useLanguage } from "@/i18n/language-context";
 
 import { BookmarkCard } from "./bookmark-card";
 
 export function BookmarksList() {
     const { data, isPending, isRefetching, error, refetch } = useBookmarks();
+    const { translations, language } = useLanguage();
 
     const isLoading = isPending || isRefetching;
 
@@ -50,11 +52,13 @@ export function BookmarksList() {
                     id='bookmarks-error-title'
                     className='text-lg font-semibold'
                 >
-                    We could not load your bookmarks
+                    {translations.common.error}
                 </h3>
                 <p className='mt-2 text-sm text-muted-foreground'>
                     {error instanceof Error
                         ? error.message
+                        : language === 'uz'
+                        ? "Iltimos, birozdan keyin qayta urinib ko'ring."
                         : "Please try again in a moment."}
                 </p>
                 <Button
@@ -64,7 +68,7 @@ export function BookmarksList() {
                     onClick={() => void refetch()}
                 >
                     <RefreshCw className='mr-2 h-4 w-4' />
-                    Retry
+                    {language === 'uz' ? 'Qayta urinish' : 'Retry'}
                 </Button>
             </section>
         );
@@ -83,21 +87,20 @@ export function BookmarksList() {
                     id='bookmarks-empty-title'
                     className='mt-5 text-xl font-semibold'
                 >
-                    No bookmarks yet
+                    {translations.bookmarks.emptyTitle}
                 </h3>
                 <p className='mx-auto mt-2 max-w-md text-sm text-muted-foreground'>
-                    Save lessons you want to revisit later and they will appear
-                    here.
+                    {translations.bookmarks.emptyDesc}
                 </p>
                 <Link
-                    href='/dashboard/subjects'
+                    href='/dashboard/classes'
                     className={buttonVariants({
                         variant: "default",
                         size: "default",
                         className: "mt-6",
                     })}
                 >
-                    Browse Lessons
+                    {translations.bookmarks.browseClasses}
                 </Link>
             </section>
         );

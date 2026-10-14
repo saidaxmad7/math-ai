@@ -1,5 +1,8 @@
+'use client';
+
 import Link from "next/link";
 import { ChevronRight } from "lucide-react";
+import { useLanguage } from "@/i18n/language-context";
 
 type SubjectCardProps = {
     gradeId: string;
@@ -9,6 +12,8 @@ type SubjectCardProps = {
 };
 
 export function SubjectCard({ gradeId, id, name, color }: SubjectCardProps) {
+    const { language } = useLanguage();
+
     return (
         <Link
             href={`/dashboard/grades/${gradeId}/subjects/${id}`}
@@ -27,7 +32,9 @@ export function SubjectCard({ gradeId, id, name, color }: SubjectCardProps) {
                 <ChevronRight className='h-5 w-5 transition-transform group-hover:translate-x-1' />
             </div>
 
-            <p className='mt-2 text-sm text-muted-foreground'>Open subject</p>
+            <p className='mt-2 text-sm text-muted-foreground'>
+                {language === 'uz' ? 'Fanni ochish' : 'Open subject'}
+            </p>
         </Link>
     );
 }

@@ -1,5 +1,8 @@
+'use client';
+
 import Link from "next/link";
 import { ChevronRight } from "lucide-react";
+import { useLanguage } from "@/i18n/language-context";
 
 type GradeCardProps = {
     id: string;
@@ -8,6 +11,8 @@ type GradeCardProps = {
 };
 
 export function GradeCard({ id, name, subjectCount }: GradeCardProps) {
+    const { translations } = useLanguage();
+
     return (
         <Link
             href={`/dashboard/grades/${id}`}
@@ -20,7 +25,7 @@ export function GradeCard({ id, name, subjectCount }: GradeCardProps) {
             </div>
 
             <p className='mt-3 text-sm text-muted-foreground'>
-                {subjectCount} subjects
+                {subjectCount} {translations.dashboard.subjectsCount}
             </p>
         </Link>
     );

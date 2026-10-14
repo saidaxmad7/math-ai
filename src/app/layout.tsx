@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Inter, Space_Grotesk } from "next/font/google";
 import { ThemeProvider } from "@/providers/theme-provider";
+import { LanguageProvider } from "@/i18n/language-context";
 import AuthSessionProvider from "@/providers/session-provider";
 import { Toaster } from "@/components/ui/sonner";
 import QueryProvider from "@/providers/query-provider";
@@ -41,7 +42,7 @@ export default function RootLayout({
 }>) {
     return (
         <html
-            lang='en'
+            lang='uz'
             suppressHydrationWarning
             className={`${inter.variable} ${spaceGrotesk.variable}`}
         >
@@ -49,8 +50,10 @@ export default function RootLayout({
                 <AuthSessionProvider>
                     <QueryProvider>
                         <ThemeProvider>
-                            {children}
-                            <Toaster richColors />
+                            <LanguageProvider>
+                                {children}
+                                <Toaster richColors />
+                            </LanguageProvider>
                         </ThemeProvider>
                     </QueryProvider>
                 </AuthSessionProvider>

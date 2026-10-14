@@ -19,8 +19,10 @@ import { PracticeCard } from '@/features/practice/components/practice-card';
 import { RemedialReview } from '@/features/practice/components/remedial-review';
 import { FilterDropdown } from '@/features/practice/components/filter-dropdown';
 import type { PracticeQuery } from '@/validations/practice.validation';
+import { useLanguage } from '@/i18n/language-context';
 
 export function PracticeList() {
+    const { translations, language } = useLanguage();
     const [viewMode, setViewMode] = useState<'lessons' | 'quiz' | 'remedial'>('lessons');
     const [selectedQuizTopic, setSelectedQuizTopic] = useState<{
         id: string;
@@ -93,14 +95,14 @@ export function PracticeList() {
     const statusOptions = [
         {
             value: 'completed',
-            label: 'Tugallangan',
-            badge: 'Yechilgan',
+            label: translations.practice.completedStatus,
+            badge: translations.practice.solvedBadge,
             icon: <CheckCircle2 className='h-4 w-4 text-emerald-500 shrink-0' />,
         },
         {
             value: 'incomplete',
-            label: 'Tugallanmagan',
-            badge: 'Kutilmoqda',
+            label: translations.practice.incompleteStatus,
+            badge: translations.practice.pendingBadge,
             icon: <Clock className='h-4 w-4 text-amber-500 shrink-0' />,
         },
     ];
@@ -139,7 +141,7 @@ export function PracticeList() {
                         className='gap-2 text-sm'
                     >
                         <BookOpen className='h-4 w-4' />
-                        Mavzular va Testlar
+                        {language === 'uz' ? 'Mavzular va Testlar' : 'Topics & Quizzes'}
                     </Button>
                     <Button
                         variant={viewMode === 'remedial' ? 'default' : 'outline'}
@@ -147,7 +149,7 @@ export function PracticeList() {
                         className='gap-2 text-sm'
                     >
                         <HelpCircle className='h-4 w-4 text-amber-500' />
-                        Xatolar ustida ishlash
+                        {language === 'uz' ? 'Xatolar ustida ishlash' : 'Work on Mistakes'}
                         {mistakes.length > 0 && (
                             <span className='ml-1 rounded-full bg-amber-500 px-2 py-0.5 text-xs text-white'>
                                 {mistakes.length}
@@ -178,49 +180,53 @@ export function PracticeList() {
                             <Input
                                 value={query}
                                 onChange={(event) => setQuery(event.target.value)}
-                                placeholder='Dars yoki mavzu qidiring...'
-                                aria-label='Dars yoki mavzu qidirish'
+                                placeholder={language === 'uz' ? 'Dars yoki mavzu qidiring...' : 'Search lesson or topic...'}
+                                aria-label='Search'
                                 className='h-10 pl-9.5 rounded-xl bg-card border-input dark:bg-zinc-900/90 dark:border-zinc-800 focus-visible:ring-2 focus-visible:ring-primary/20 transition-all'
                             />
                         </div>
 
                         <FilterDropdown
-                            label='Sinf'
+                            label={translations.practice.gradeFilter}
                             icon={<GraduationCap className='h-4 w-4 text-primary' />}
                             value={filters.gradeId}
                             onChange={handleGradeChange}
                             options={gradeOptions}
-                            allLabel='Barcha sinflar'
+                            allLabel={translations.practice.allGrades}
                         />
 
                         <FilterDropdown
-                            label='Fan'
+                            label={translations.practice.subjectFilter}
                             icon={<BookOpen className='h-4 w-4 text-emerald-500' />}
                             value={filters.subjectId}
                             onChange={handleSubjectChange}
                             options={subjectOptions}
-                            allLabel={filters.gradeId ? 'Barcha fanlar' : 'Barcha fanlar va qismlar'}
+                            allLabel={
+                                filters.gradeId
+                                    ? (language === 'uz' ? 'Barcha fanlar' : 'All subjects')
+                                    : (language === 'uz' ? 'Barcha fanlar va qismlar' : 'All subjects & parts')
+                            }
                         />
 
                         <FilterDropdown
-                            label='Holat'
+                            label={translations.practice.statusFilter}
                             icon={<CheckCircle2 className='h-4 w-4 text-violet-500' />}
                             value={filters.status === 'all' ? undefined : filters.status}
                             onChange={(val) => updateFilter('status', (val as PracticeQuery['status']) ?? 'all')}
                             options={statusOptions}
-                            allLabel='Barcha holatlar'
+                            allLabel={translations.practice.allStatuses}
                         />
                     </div>
 
                     {isLoading ? (
-                        <p className='text-sm text-muted-foreground'>Yuklanmoqda...</p>
+                        <p className='text-sm text-muted-foreground'>{translations.practice.loading}</p>
                     ) : isError ? (
                         <p className='text-sm text-destructive'>
-                            Mashqlarni yuklab bo&apos;lmadi.
+                            {translations.practice.error}
                         </p>
                     ) : !data || data.lessons.length === 0 ? (
                         <p className='text-sm text-muted-foreground'>
-                            Mos keladigan dars topilmadi.
+                            {translations.practice.noLessonsFound}
                         </p>
                     ) : (
                         <div className='grid gap-6 md:grid-cols-2 xl:grid-cols-3'>

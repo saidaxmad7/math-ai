@@ -53,7 +53,7 @@ export function Features() {
 
                 <div
                     id='advantages'
-                    className='mt-12 grid gap-6 md:grid-cols-2 xl:grid-cols-4'
+                    className='mt-8 sm:mt-12 grid gap-4 sm:gap-6 grid-cols-1 sm:grid-cols-2 xl:grid-cols-4'
                 >
                     {features.map((feature, index) => {
                         const Icon = feature.icon;

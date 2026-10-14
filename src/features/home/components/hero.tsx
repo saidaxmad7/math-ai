@@ -17,7 +17,7 @@ export function Hero() {
     return (
         <section
             id='grades'
-            className='relative overflow-hidden py-24 sm:py-28 lg:py-36'
+            className='relative overflow-hidden py-14 sm:py-24 lg:py-32'
         >
             <div className='absolute inset-0 -z-10'>
                 <div className='absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(168,85,247,0.3),transparent_34%),radial-gradient(circle_at_80%_20%,rgba(129,140,248,0.24),transparent_28%),linear-gradient(135deg,rgba(9,9,11,0.98),rgba(17,24,39,0.92))]' />
@@ -26,14 +26,14 @@ export function Hero() {
             </div>
 
             <Container>
-                <div className='mx-auto flex max-w-5xl flex-col items-center text-center'>
+                <div className='mx-auto flex max-w-5xl flex-col items-center text-center px-2 sm:px-0'>
                     <motion.div
                         initial={{ opacity: 0, y: 12 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.4 }}
-                        className='inline-flex items-center gap-2 rounded-full border border-violet-400/25 bg-violet-500/10 px-4 py-2 text-sm font-medium text-violet-200 shadow-lg shadow-violet-950/20 backdrop-blur'
+                        className='inline-flex items-center gap-2 rounded-full border border-violet-400/25 bg-violet-500/10 px-3.5 py-1.5 sm:px-4 sm:py-2 text-xs sm:text-sm font-medium text-violet-200 shadow-lg shadow-violet-950/20 backdrop-blur'
                     >
-                        <Sparkles className='h-4 w-4' />
+                        <Sparkles className='h-3.5 w-3.5 sm:h-4 sm:w-4' />
                         <span>{translations.landing.heroBadge}</span>
                     </motion.div>
 
@@ -41,7 +41,7 @@ export function Hero() {
                         initial={{ opacity: 0, y: 18 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.5, delay: 0.05 }}
-                        className='mt-8 text-4xl font-semibold tracking-tight text-white sm:text-5xl lg:text-7xl'
+                        className='mt-6 sm:mt-8 text-3xl font-semibold tracking-tight text-white sm:text-5xl lg:text-7xl leading-tight'
                     >
                         {translations.landing.heroTitlePrefix}
                         <br />
@@ -54,7 +54,7 @@ export function Hero() {
                         initial={{ opacity: 0, y: 18 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.5, delay: 0.1 }}
-                        className='mt-8 max-w-2xl text-lg leading-8 text-slate-300 sm:text-xl'
+                        className='mt-5 sm:mt-8 max-w-2xl text-base leading-relaxed text-slate-300 sm:text-lg sm:leading-8'
                     >
                         {translations.landing.heroDescription}
                     </motion.p>
@@ -63,20 +63,20 @@ export function Hero() {
                         initial={{ opacity: 0, y: 18 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.5, delay: 0.15 }}
-                        className='mt-10 flex flex-col gap-3 sm:flex-row'
+                        className='mt-8 sm:mt-10 flex w-full flex-col gap-3 sm:w-auto sm:flex-row'
                     >
-                        <Link href='/dashboard'>
-                            <Button className='rounded-full bg-linear-to-r from-violet-500 via-fuchsia-500 to-indigo-500 px-6 py-6 text-sm font-semibold text-white shadow-2xl shadow-violet-950/30 transition-all duration-300 hover:-translate-y-1 hover:shadow-violet-950/40'>
+                        <Link href='/dashboard' className='w-full sm:w-auto'>
+                            <Button className='w-full sm:w-auto rounded-full bg-linear-to-r from-violet-500 via-fuchsia-500 to-indigo-500 px-6 py-5 sm:py-6 text-sm font-semibold text-white shadow-2xl shadow-violet-950/30 transition-all duration-300 hover:-translate-y-1 hover:shadow-violet-950/40'>
                                 {translations.landing.getStarted}
                                 <ArrowRight className='ml-2 h-4 w-4' />
                             </Button>
                         </Link>
 
                         {showLoginButton ? (
-                            <Link href='/login'>
+                            <Link href='/login' className='w-full sm:w-auto'>
                                 <Button
                                     variant='outline'
-                                    className='rounded-full border-white/15 bg-white/5 px-6 py-6 text-sm font-semibold text-white shadow-lg shadow-black/20 backdrop-blur transition-all duration-300 hover:-translate-y-1 hover:bg-white/10'
+                                    className='w-full sm:w-auto rounded-full border-white/15 bg-white/5 px-6 py-5 sm:py-6 text-sm font-semibold text-white shadow-lg shadow-black/20 backdrop-blur transition-all duration-300 hover:-translate-y-1 hover:bg-white/10'
                                 >
                                     {translations.landing.login}
                                 </Button>
@@ -88,7 +88,7 @@ export function Hero() {
                         initial={{ opacity: 0, y: 24 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.55, delay: 0.2 }}
-                        className='mt-14 grid w-full gap-3 rounded-[2rem] border border-white/10 bg-white/5 p-4 shadow-2xl shadow-violet-950/20 backdrop-blur md:grid-cols-3'
+                        className='mt-10 sm:mt-14 grid w-full gap-3 rounded-2xl sm:rounded-[2rem] border border-white/10 bg-white/5 p-3 sm:p-4 shadow-2xl shadow-violet-950/20 backdrop-blur grid-cols-1 md:grid-cols-3'
                     >
                         <div className='rounded-2xl border border-white/10 bg-black/20 p-4 text-left'>
                             <p className='text-sm font-semibold text-violet-200'>

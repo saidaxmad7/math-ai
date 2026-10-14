@@ -19,7 +19,7 @@ export function BookmarksList() {
     if (isLoading) {
         return (
             <div
-                className='grid gap-5 md:grid-cols-2 xl:grid-cols-3'
+                className='grid gap-4 sm:gap-5 grid-cols-1 sm:grid-cols-2 xl:grid-cols-3'
                 aria-busy='true'
             >
                 {Array.from({ length: 3 }, (_, index) => (
@@ -107,7 +107,7 @@ export function BookmarksList() {
     }
 
     return (
-        <div className='grid gap-5 md:grid-cols-2 xl:grid-cols-3'>
+        <div className='grid gap-4 sm:gap-5 grid-cols-1 sm:grid-cols-2 xl:grid-cols-3'>
             {data.map((bookmark) => (
                 <BookmarkCard key={bookmark.id} bookmark={bookmark} />
             ))}

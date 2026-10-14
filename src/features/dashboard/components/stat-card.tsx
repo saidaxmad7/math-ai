@@ -23,9 +23,9 @@ export function StatCard({
             </CardHeader>
 
             <CardContent>
-                <div className='text-3xl font-bold'>{value}</div>
+                <div className='text-2xl sm:text-3xl font-bold'>{value}</div>
 
-                <p className='mt-2 text-sm text-muted-foreground'>
+                <p className='mt-1 sm:mt-2 text-xs sm:text-sm text-muted-foreground'>
                     {description}
                 </p>
             </CardContent>

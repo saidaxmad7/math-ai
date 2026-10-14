@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { Bot, MessageSquarePlus, Sparkles, Loader2 } from 'lucide-react';
+import { Bot, MessageSquarePlus, Sparkles, Loader2, History, ChevronDown } from 'lucide-react';
 
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -56,6 +56,8 @@ export function AIChat() {
     const { translations, language } = useLanguage();
     const [conversationId, setConversationId] = useState<string>();
     const [content, setContent] = useState('');
+    const [mobileHistoryOpen, setMobileHistoryOpen] = useState(false);
+
     const {
         data: conversations = [],
         isLoading: isConversationsLoading,
@@ -95,6 +97,7 @@ export function AIChat() {
     function handleStartNewChat() {
         setConversationId(undefined);
         setContent('');
+        setMobileHistoryOpen(false);
     }
 
     if (isConversationsError) {
@@ -111,8 +114,8 @@ export function AIChat() {
 
     return (
         <div className='grid gap-6 lg:grid-cols-[280px_1fr]'>
-            {/* History Panel */}
-            <Card className='h-fit shadow-xs'>
+            {/* Desktop Left History Panel */}
+            <Card className='hidden lg:block h-fit shadow-xs'>
                 <CardHeader className='pb-3'>
                     <div className='flex items-center justify-between'>
                         <CardTitle className='text-base font-semibold'>
@@ -160,16 +163,88 @@ export function AIChat() {
                 </CardContent>
             </Card>
 
-            {/* Chat & Prompts */}
+            {/* Mobile & Tablet History Bar */}
+            <div className='lg:hidden space-y-2'>
+                <div className='flex items-center justify-between gap-2 rounded-2xl border bg-card p-2.5 sm:p-3 shadow-xs'>
+                    <button
+                        type='button'
+                        onClick={() => setMobileHistoryOpen(!mobileHistoryOpen)}
+                        className='flex items-center gap-2 min-w-0 text-left'
+                    >
+                        <Bot className='size-4 text-primary shrink-0' />
+                        <span className='text-xs font-semibold truncate'>
+                            {activeConversation?.title ?? translations.aiChat.newChatDefaultTitle}
+                        </span>
+                        <ChevronDown className={`size-3.5 text-muted-foreground transition-transform duration-200 ${mobileHistoryOpen ? 'rotate-180' : ''}`} />
+                    </button>
+                    <div className='flex items-center gap-1.5 shrink-0'>
+                        <Button
+                            variant='outline'
+                            size='sm'
+                            className='h-8 text-xs gap-1'
+                            onClick={() => setMobileHistoryOpen(!mobileHistoryOpen)}
+                        >
+                            <History className='size-3.5' />
+                            <span className='hidden sm:inline'>{translations.aiChat.historyTitle}</span>
+                        </Button>
+                        <Button
+                            size='sm'
+                            className='h-8 text-xs gap-1'
+                            onClick={handleStartNewChat}
+                        >
+                            <MessageSquarePlus className='size-3.5' />
+                            <span className='hidden sm:inline'>{translations.aiChat.newChat}</span>
+                        </Button>
+                    </div>
+                </div>
+
+                {/* Collapsible Mobile History List */}
+                {mobileHistoryOpen && (
+                    <Card className='shadow-md border-primary/20 animate-in fade-in-50 duration-150'>
+                        <CardHeader className='py-2.5 px-4 border-b'>
+                            <CardTitle className='text-xs font-semibold uppercase tracking-wider text-muted-foreground'>
+                                {translations.aiChat.historyTitle}
+                            </CardTitle>
+                        </CardHeader>
+                        <CardContent className='p-2 max-h-60 overflow-y-auto space-y-1'>
+                            {conversations.length === 0 ? (
+                                <p className='text-xs text-muted-foreground py-2 text-center'>
+                                    {translations.aiChat.emptyHistory}
+                                </p>
+                            ) : (
+                                conversations.map((item) => (
+                                    <button
+                                        key={item.id}
+                                        type='button'
+                                        className={`w-full truncate rounded-lg px-3 py-2 text-left text-xs transition-colors hover:bg-muted ${
+                                            item.id === activeConversationId
+                                                ? 'bg-primary/10 font-semibold text-primary'
+                                                : 'text-muted-foreground'
+                                        }`}
+                                        onClick={() => {
+                                            setConversationId(item.id);
+                                            setMobileHistoryOpen(false);
+                                        }}
+                                    >
+                                        {item.title ?? translations.aiChat.newChatDefaultTitle}
+                                    </button>
+                                ))
+                            )}
+                        </CardContent>
+                    </Card>
+                )}
+            </div>
+
+            {/* Chat & Prompts Section */}
             <div className='space-y-6'>
-                {/* Suggested Prompts */}
+                {/* Suggested Prompts (when empty) */}
                 {currentMessages.length === 0 && (
                     <div className='space-y-3'>
                         <div className='flex items-center gap-2 text-xs font-semibold text-muted-foreground uppercase tracking-wider'>
                             <Sparkles className='size-3.5 text-primary' />
                             {translations.aiChat.suggestedPromptsTitle}
                         </div>
-                        <div className='grid gap-2 sm:grid-cols-2'>
+                        <div className='grid gap-2 grid-cols-1 sm:grid-cols-2'>
                             {prompts.map((item, idx) => (
                                 <button
                                     key={idx}

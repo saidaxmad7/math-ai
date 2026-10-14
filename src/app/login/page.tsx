@@ -51,7 +51,7 @@ function LoginForm() {
 
     return (
         <Card className='w-full max-w-md shadow-xl'>
-            <CardContent className='flex flex-col items-center gap-6 p-8'>
+            <CardContent className='flex flex-col items-center gap-5 sm:gap-6 p-5 sm:p-8'>
                 <div className='flex flex-col items-center gap-3'>
                     <div className='flex h-14 w-14 items-center justify-center rounded-2xl bg-primary text-primary-foreground shadow-md'>
                         <GraduationCap className='h-8 w-8' />
@@ -186,8 +186,8 @@ function LoginForm() {
 
 export default function LoginPage() {
     return (
-        <main className='relative flex min-h-screen flex-col items-center justify-center bg-background px-6'>
-            <div className='absolute top-4 right-4 z-10'>
+        <main className='relative flex min-h-screen flex-col items-center justify-center bg-background px-4 sm:px-6 py-8 sm:py-12'>
+            <div className='absolute top-3 right-3 sm:top-4 sm:right-4 z-10'>
                 <LanguageSwitcher />
             </div>
             <Suspense fallback={<div className='text-sm text-muted-foreground'>Yuklanmoqda...</div>}>

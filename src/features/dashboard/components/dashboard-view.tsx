@@ -44,33 +44,33 @@ export function DashboardView({ grades }: DashboardViewProps) {
     ];
 
     return (
-        <div className='space-y-10'>
+        <div className='space-y-6 sm:space-y-10'>
             <div>
-                <h1 className='font-heading text-3xl sm:text-4xl font-bold'>
+                <h1 className='font-heading text-2xl sm:text-3xl lg:text-4xl font-bold'>
                     {translations.dashboard.welcomeBack}
                 </h1>
 
-                <p className='mt-2 text-muted-foreground'>
+                <p className='mt-1.5 sm:mt-2 text-sm sm:text-base text-muted-foreground'>
                     {translations.dashboard.continueJourney}
                 </p>
             </div>
 
-            <section className='grid gap-6 md:grid-cols-2 xl:grid-cols-4'>
+            <section className='grid gap-3 sm:gap-4 md:gap-6 grid-cols-1 sm:grid-cols-2 xl:grid-cols-4'>
                 <DashboardStats />
             </section>
 
-            <section className='space-y-6'>
+            <section className='space-y-4 sm:space-y-6'>
                 <div>
-                    <h2 className='font-heading text-2xl font-bold'>
+                    <h2 className='font-heading text-xl sm:text-2xl font-bold'>
                         {translations.dashboard.gradesTitle}
                     </h2>
 
-                    <p className='text-muted-foreground text-sm'>
+                    <p className='text-muted-foreground text-xs sm:text-sm'>
                         {translations.dashboard.gradesSubtitle}
                     </p>
                 </div>
 
-                <div className='grid gap-4 md:grid-cols-3'>
+                <div className='grid gap-3.5 sm:gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3'>
                     {grades.map((grade) => (
                         <GradeCard
                             key={grade.id}
@@ -82,18 +82,18 @@ export function DashboardView({ grades }: DashboardViewProps) {
                 </div>
             </section>
 
-            <section className='space-y-6'>
+            <section className='space-y-4 sm:space-y-6'>
                 <div>
-                    <h2 className='font-heading text-2xl font-bold'>
+                    <h2 className='font-heading text-xl sm:text-2xl font-bold'>
                         {translations.dashboard.quickActionsTitle}
                     </h2>
 
-                    <p className='text-muted-foreground text-sm'>
+                    <p className='text-muted-foreground text-xs sm:text-sm'>
                         {translations.dashboard.quickActionsSubtitle}
                     </p>
                 </div>
 
-                <div className='grid gap-6 md:grid-cols-2 xl:grid-cols-3'>
+                <div className='grid gap-4 sm:gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3'>
                     {quickActions.map((action) => (
                         <QuickActionCard
                             key={action.href}
@@ -106,7 +106,7 @@ export function DashboardView({ grades }: DashboardViewProps) {
                 </div>
             </section>
 
-            <div className='grid gap-6 xl:grid-cols-2'>
+            <div className='grid gap-6 grid-cols-1 lg:grid-cols-2'>
                 <LearningProgress />
                 <RecentActivity />
             </div>

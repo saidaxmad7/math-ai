@@ -35,9 +35,9 @@ export function LessonDetailView({
     const topic = lesson.topic;
 
     return (
-        <div className='mx-auto max-w-4xl space-y-10 pb-16'>
+        <div className='mx-auto max-w-4xl space-y-6 sm:space-y-10 pb-16'>
             {/* Header & Breadcrumb */}
-            <div className='space-y-4'>
+            <div className='space-y-3 sm:space-y-4'>
                 <Breadcrumb
                     items={[
                         {
@@ -59,7 +59,7 @@ export function LessonDetailView({
                 />
 
                 <div className='flex flex-col gap-4 md:flex-row md:items-start md:justify-between'>
-                    <div className='space-y-3'>
+                    <div className='space-y-2.5 sm:space-y-3'>
                         <div className='flex flex-wrap items-center gap-2'>
                             <Badge variant='secondary' className='text-xs font-semibold'>
                                 {grade.name}
@@ -74,18 +74,18 @@ export function LessonDetailView({
                             )}
                         </div>
 
-                        <h1 className='font-heading text-3xl sm:text-4xl font-extrabold tracking-tight text-foreground'>
+                        <h1 className='font-heading text-2xl sm:text-3xl md:text-4xl font-extrabold tracking-tight text-foreground'>
                             {lesson.title}
                         </h1>
 
                         {lesson.description && (
-                            <p className='text-base leading-relaxed text-muted-foreground'>
+                            <p className='text-sm sm:text-base leading-relaxed text-muted-foreground'>
                                 {lesson.description}
                             </p>
                         )}
                     </div>
 
-                    <div className='flex shrink-0 items-center gap-2 pt-2 md:pt-0'>
+                    <div className='flex flex-wrap items-center gap-2 pt-2 md:pt-0'>
                         <BookmarkButton lessonId={lesson.id} />
                         <CompleteLessonButton lessonId={lesson.id} />
                         <Link
@@ -103,10 +103,10 @@ export function LessonDetailView({
             </div>
 
             {/* Main Lesson Theory & Diagrams Content */}
-            <article className='rounded-3xl border bg-card p-6 sm:p-10 shadow-xs space-y-6'>
+            <article className='rounded-2xl sm:rounded-3xl border bg-card p-4 sm:p-8 lg:p-10 shadow-xs space-y-6 overflow-hidden'>
                 <div className='flex items-center gap-2 border-b pb-4 text-xs font-semibold text-muted-foreground tracking-wider uppercase'>
-                    <BookOpen className='h-4 w-4 text-primary' />
-                    <span>
+                    <BookOpen className='h-4 w-4 text-primary shrink-0' />
+                    <span className='truncate'>
                         {language === 'uz'
                             ? 'Darslik materiali va qadam-baqadam nazariya'
                             : 'Textbook Curriculum & Step-by-Step Theory'}

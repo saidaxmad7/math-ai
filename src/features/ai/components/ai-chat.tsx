@@ -13,6 +13,7 @@ import {
 import { AIComposer } from '@/features/ai/components/ai-composer';
 import { AIMessageList } from '@/features/ai/components/ai-message-list';
 import { useLanguage } from '@/i18n/language-context';
+import { toast } from 'sonner';
 
 const SUGGESTED_PROMPTS_UZ = [
     {
@@ -89,8 +90,16 @@ export function AIChat() {
 
             setConversationId(response.id);
             setContent('');
-        } catch (e) {
+        } catch (e: unknown) {
             console.error('AI error:', e);
+            const err = e as { response?: { data?: { message?: string } }; message?: string };
+            const msg =
+                err?.response?.data?.message ||
+                err?.message ||
+                (language === 'uz'
+                    ? "AI javob bera olmadi. Sozlamalar sahifasida o'zingizning bepul Gemini API kalitingizni ulab ko'ring."
+                    : "AI failed to respond. Please check your Gemini API key in Settings.");
+            toast.error(msg);
         }
     }
 

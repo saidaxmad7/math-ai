@@ -131,8 +131,8 @@ export function InLessonAITutor({
                     role: 'assistant',
                     content: isKeyIssue
                         ? (language === 'uz'
-                            ? `⚠️ Gemini API: ${errorMsg}. Sozlamalar sahifasida o'zingizning bepul Gemini API kalitingizni ulab ko'ring.`
-                            : `⚠️ Gemini API: ${errorMsg}. Try connecting your own free Gemini API key in Settings.`)
+                            ? `⚠️ **Gemini API kaliti zarur:** ${errorMsg}\n\n👉 [Sozlamalar sahifasiga o‘tish](/dashboard/settings) orqali 1 daqiqada bepul shaxsiy kalitingizni ulang.`
+                            : `⚠️ **Gemini API key required:** ${errorMsg}\n\n👉 Go to [Settings](/dashboard/settings) to connect your free Gemini API key in 1 minute.`)
                         : (language === 'uz'
                             ? 'Kechirasiz, tizimda vaqtinchalik xatolik yuz berdi. Iltimos, qaytadan urinib ko‘ring.'
                             : 'Sorry, a temporary error occurred. Please try again.'),

@@ -60,6 +60,18 @@ export async function POST(request: Request) {
             }
         }
 
+        const serverKey = process.env.GEMINI_API_KEY?.trim() || process.env.AI_API_KEY?.trim();
+        const finalKey = resolvedApiKey || (serverKey && serverKey.length > 0 ? serverKey : undefined);
+
+        if (!finalKey) {
+            return errorResponse(
+                input.language === 'en'
+                    ? 'No Gemini API key found. Please connect your free Google Gemini API key in Settings.'
+                    : "Gemini API kaliti topilmadi. Iltimos, Sozlamalar sahifasida o'zingizning bepul Gemini API kalitingizni ulang.",
+                400,
+            );
+        }
+
         if (input.stream) {
             const encoder = new TextEncoder();
             const stream = new ReadableStream<Uint8Array>({
@@ -68,7 +80,7 @@ export async function POST(request: Request) {
                         for await (const event of streamAIMessage(
                             session.user.id,
                             input,
-                            resolvedApiKey,
+                            finalKey,
                         )) {
                             controller.enqueue(
                                 encoder.encode(
@@ -93,7 +105,7 @@ export async function POST(request: Request) {
             });
         }
 
-        const conversation = await sendAIMessage(session.user.id, input, resolvedApiKey);
+        const conversation = await sendAIMessage(session.user.id, input, finalKey);
 
         return successResponse(
             toAIConversationResponse(conversation),

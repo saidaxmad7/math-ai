@@ -7,6 +7,7 @@ import { QuickActionCard } from '@/features/dashboard/components/quick-action-ca
 import { RecentActivity } from '@/features/dashboard/components/recent-activity';
 import { LearningProgress } from '@/features/dashboard/components/learning-progress';
 import { GradeCard } from '@/features/dashboard/components/grade-card';
+import { CreativeHeroGreeting } from '@/features/dashboard/components/creative-hero-greeting';
 import { useLanguage } from '@/i18n/language-context';
 
 type Grade = {
@@ -45,15 +46,8 @@ export function DashboardView({ grades }: DashboardViewProps) {
 
     return (
         <div className='space-y-6 sm:space-y-10'>
-            <div>
-                <h1 className='font-heading text-2xl sm:text-3xl lg:text-4xl font-bold'>
-                    {translations.dashboard.welcomeBack}
-                </h1>
-
-                <p className='mt-1.5 sm:mt-2 text-sm sm:text-base text-muted-foreground'>
-                    {translations.dashboard.continueJourney}
-                </p>
-            </div>
+            {/* Dynamic, Personalized & Inspiring Hero Greeting */}
+            <CreativeHeroGreeting />
 
             <section className='grid gap-3 sm:gap-4 md:gap-6 grid-cols-1 sm:grid-cols-2 xl:grid-cols-4'>
                 <DashboardStats />

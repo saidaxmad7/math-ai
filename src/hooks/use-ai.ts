@@ -47,9 +47,13 @@ async function fetchAIConversation(
 async function sendAIMessage(
     input: SendAIMessageInput,
 ): Promise<AIConversationResponse> {
+    const customKey = typeof window !== 'undefined' ? localStorage.getItem('math_gemini_api_key') : null;
     const { data } = await axios.post<AIConversationApiResponse>(
         '/api/ai/conversations',
         { ...input, stream: false },
+        {
+            headers: customKey ? { 'x-gemini-api-key': customKey } : undefined,
+        },
     );
 
     if (!data.success) {

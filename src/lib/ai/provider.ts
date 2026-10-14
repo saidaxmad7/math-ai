@@ -9,6 +9,7 @@ export type AIProviderMessage = {
 
 export type AICompletionRequest = {
     messages: AIProviderMessage[];
+    apiKey?: string;
 };
 
 export interface AIProvider {
@@ -77,6 +78,7 @@ export class OpenAICompatibleProvider implements AIProvider {
             '/chat/completions',
             request,
             false,
+            request.apiKey,
         );
         const payload: JSONValue = await response.json();
         const text = getCompletionText(payload);
@@ -89,7 +91,12 @@ export class OpenAICompatibleProvider implements AIProvider {
     }
 
     async *streamResponse(request: AICompletionRequest): AsyncIterable<string> {
-        const response = await this.request('/chat/completions', request, true);
+        const response = await this.request(
+            '/chat/completions',
+            request,
+            true,
+            request.apiKey,
+        );
         const reader = response.body?.getReader();
 
         if (!reader) {
@@ -176,10 +183,12 @@ export class OpenAICompatibleProvider implements AIProvider {
         path: string,
         body: AICompletionRequest | { input: string },
         stream: boolean,
+        apiKeyOverride?: string,
     ): Promise<Response> {
-        if (!this.environment.AI_API_KEY) {
+        const apiKey = apiKeyOverride || this.environment.AI_API_KEY;
+        if (!apiKey) {
             throw new Error(
-                'Google Gemini API kaliti kiritilmagan. Iltimos, .env faylida GEMINI_API_KEY yoki AI_API_KEY ni sozlang.',
+                'Google Gemini API kaliti kiritilmagan. Iltimos, Sozlamalarda shaxsiy kalitingizni kiriting yoki .env faylida GEMINI_API_KEY ni sozlang.',
             );
         }
 
@@ -192,7 +201,7 @@ export class OpenAICompatibleProvider implements AIProvider {
         const response = await fetch(endpoint, {
             method: 'POST',
             headers: {
-                Authorization: `Bearer ${this.environment.AI_API_KEY}`,
+                Authorization: `Bearer ${apiKey}`,
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify({
@@ -223,9 +232,10 @@ export class GoogleGeminiNativeProvider implements AIProvider {
     }
 
     async generateResponse(request: AICompletionRequest): Promise<string> {
-        if (!this.environment.AI_API_KEY) {
+        const apiKey = request.apiKey || this.environment.AI_API_KEY;
+        if (!apiKey) {
             throw new Error(
-                'Google Gemini API kaliti kiritilmagan. Iltimos, .env faylida GEMINI_API_KEY ni sozlang.',
+                'Google Gemini API kaliti kiritilmagan. Iltimos, Sozlamalar sahifasida bepul Gemini API kalitingizni kiriting.',
             );
         }
 
@@ -254,7 +264,7 @@ export class GoogleGeminiNativeProvider implements AIProvider {
 
         for (const model of modelsToTry) {
             try {
-                const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${this.environment.AI_API_KEY}`;
+                const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`;
                 const response = await fetch(url, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },

@@ -80,22 +80,30 @@ export function InLessonAITutor({
         setIsLoading(true);
 
         try {
+            const customKey = typeof window !== 'undefined' ? localStorage.getItem('math_gemini_api_key') : null;
+            const headers: Record<string, string> = {
+                'Content-Type': 'application/json',
+            };
+            if (customKey) {
+                headers['x-gemini-api-key'] = customKey;
+            }
+
             const res = await fetch('/api/ai/conversations', {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
+                headers,
                 body: JSON.stringify({
                     conversationId,
                     content: text,
                     contextType: 'LESSON',
                     contextId: lessonId,
                     language,
+                    ...(customKey ? { customApiKey: customKey } : {}),
                 }),
             });
 
             if (!res.ok) {
-                throw new Error('AI javob bera olmadi');
+                const errData = await res.json().catch(() => null);
+                throw new Error(errData?.message || 'AI javob bera olmadi');
             }
 
             const data = await res.json();
@@ -110,15 +118,24 @@ export function InLessonAITutor({
             }
 
             setMessages((prev) => [...prev, { role: 'assistant', content: reply }]);
-        } catch {
+        } catch (err) {
+            const errorMsg = err instanceof Error ? err.message : '';
+            const isKeyIssue = errorMsg.toLowerCase().includes('kalit') || 
+                               errorMsg.toLowerCase().includes('key') || 
+                               errorMsg.toLowerCase().includes('quota') ||
+                               errorMsg.toLowerCase().includes('limit');
+
             setMessages((prev) => [
                 ...prev,
                 {
                     role: 'assistant',
-                    content:
-                        language === 'uz'
+                    content: isKeyIssue
+                        ? (language === 'uz'
+                            ? `⚠️ Gemini API: ${errorMsg}. Sozlamalar sahifasida o'zingizning bepul Gemini API kalitingizni ulab ko'ring.`
+                            : `⚠️ Gemini API: ${errorMsg}. Try connecting your own free Gemini API key in Settings.`)
+                        : (language === 'uz'
                             ? 'Kechirasiz, tizimda vaqtinchalik xatolik yuz berdi. Iltimos, qaytadan urinib ko‘ring.'
-                            : 'Sorry, a temporary error occurred. Please try again.',
+                            : 'Sorry, a temporary error occurred. Please try again.'),
                 },
             ]);
         } finally {

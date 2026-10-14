@@ -124,7 +124,11 @@ export async function getAIConversation(
     return conversation;
 }
 
-export async function sendAIMessage(userId: string, input: SendAIMessageInput) {
+export async function sendAIMessage(
+    userId: string,
+    input: SendAIMessageInput,
+    apiKey?: string,
+) {
     const conversation = await getOrCreateConversation(userId, input);
     const context = await buildContext(
         conversation.contextType,
@@ -143,6 +147,7 @@ export async function sendAIMessage(userId: string, input: SendAIMessageInput) {
     ];
     const content = await aiProvider.generateResponse({
         messages: toProviderMessages(messages, context, input.language),
+        apiKey: apiKey ?? input.customApiKey,
     });
 
     await createMessage({
@@ -158,6 +163,7 @@ export async function sendAIMessage(userId: string, input: SendAIMessageInput) {
 export async function* streamAIMessage(
     userId: string,
     input: SendAIMessageInput,
+    apiKey?: string,
 ): AsyncGenerator<
     | { type: 'conversation'; conversationId: string }
     | { type: 'token'; content: string }
@@ -187,6 +193,7 @@ export async function* streamAIMessage(
 
     for await (const token of aiProvider.streamResponse({
         messages: toProviderMessages(messages, context, input.language),
+        apiKey: apiKey ?? input.customApiKey,
     })) {
         content += token;
         yield { type: 'token', content: token };

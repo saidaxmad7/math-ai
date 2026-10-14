@@ -6,6 +6,7 @@ import {
     toAIConversationResponse,
     toAIConversationsResponse,
 } from '@/mappers/ai.mapper';
+import { prisma } from '@/lib/prisma';
 import {
     getAIConversations,
     sendAIMessage,
@@ -40,7 +41,24 @@ export async function POST(request: Request) {
             return errorResponse('Unauthorized.', 401);
         }
 
+        const headerApiKey = request.headers.get('x-gemini-api-key')?.trim();
         const input = sendAIMessageSchema.parse(await request.json());
+
+        let resolvedApiKey = headerApiKey || input.customApiKey?.trim() || undefined;
+
+        if (!resolvedApiKey) {
+            try {
+                const user = await prisma.user.findUnique({
+                    where: { id: session.user.id },
+                    select: { geminiApiKey: true },
+                });
+                if (user?.geminiApiKey) {
+                    resolvedApiKey = user.geminiApiKey;
+                }
+            } catch {
+                // Fallback gracefully
+            }
+        }
 
         if (input.stream) {
             const encoder = new TextEncoder();
@@ -50,6 +68,7 @@ export async function POST(request: Request) {
                         for await (const event of streamAIMessage(
                             session.user.id,
                             input,
+                            resolvedApiKey,
                         )) {
                             controller.enqueue(
                                 encoder.encode(
@@ -74,7 +93,7 @@ export async function POST(request: Request) {
             });
         }
 
-        const conversation = await sendAIMessage(session.user.id, input);
+        const conversation = await sendAIMessage(session.user.id, input, resolvedApiKey);
 
         return successResponse(
             toAIConversationResponse(conversation),

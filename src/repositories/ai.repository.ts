@@ -93,3 +93,19 @@ export async function findLessonAIContext(lessonId: string) {
         },
     });
 }
+
+export async function updateConversationTitle(conversationId: string, title: string) {
+    return prisma.aIConversation.update({
+        where: { id: conversationId },
+        data: { title },
+    });
+}
+
+export async function deleteConversation(userId: string, conversationId: string) {
+    return prisma.aIConversation.deleteMany({
+        where: {
+            id: conversationId,
+            userId,
+        },
+    });
+}

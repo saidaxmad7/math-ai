@@ -13,6 +13,8 @@ import {
     Settings,
     ArrowRight,
     AlertTriangle,
+    MessageSquare,
+    Trash2,
 } from 'lucide-react';
 
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -21,6 +23,7 @@ import {
     useAIConversation,
     useAIConversations,
     useSendAIMessage,
+    useDeleteAIConversation,
 } from '@/hooks/use-ai';
 import { AIComposer } from '@/features/ai/components/ai-composer';
 import { AIMessageList } from '@/features/ai/components/ai-message-list';
@@ -67,7 +70,7 @@ const SUGGESTED_PROMPTS_EN = [
 
 export function AIChat() {
     const { translations, language } = useLanguage();
-    const [conversationId, setConversationId] = useState<string>();
+    const [selectedId, setSelectedId] = useState<string | 'new' | null>(null);
     const [content, setContent] = useState('');
     const [mobileHistoryOpen, setMobileHistoryOpen] = useState(false);
 
@@ -76,14 +79,21 @@ export function AIChat() {
         isLoading: isConversationsLoading,
         isError: isConversationsError,
     } = useAIConversations();
-    const { data: conversation } = useAIConversation(conversationId);
-    const sendMessage = useSendAIMessage();
 
-    const activeConversationId = conversationId ?? conversations[0]?.id;
+    // Agar foydalanuvchi "Yangi suhbat"ni bosgan bo'lsa, activeConversationId = undefined bo'ladi
+    const activeConversationId =
+        selectedId === 'new'
+            ? undefined
+            : (selectedId ?? conversations[0]?.id);
+
+    const { data: conversation } = useAIConversation(activeConversationId);
+    const sendMessage = useSendAIMessage();
+    const deleteConversation = useDeleteAIConversation();
 
     const activeConversation =
-        conversation ??
-        conversations.find((item) => item.id === activeConversationId);
+        selectedId === 'new'
+            ? null
+            : (conversation ?? conversations.find((item) => item.id === activeConversationId));
 
     const prompts = language === 'uz' ? SUGGESTED_PROMPTS_UZ : SUGGESTED_PROMPTS_EN;
 
@@ -100,7 +110,7 @@ export function AIChat() {
                 language,
             });
 
-            setConversationId(response.id);
+            setSelectedId(response.id);
             setContent('');
         } catch (e: unknown) {
             console.error('AI error:', e);
@@ -116,9 +126,22 @@ export function AIChat() {
     }
 
     function handleStartNewChat() {
-        setConversationId(undefined);
+        setSelectedId('new');
         setContent('');
         setMobileHistoryOpen(false);
+    }
+
+    async function handleDeleteChat(e: React.MouseEvent, id: string) {
+        e.stopPropagation();
+        try {
+            await deleteConversation.mutateAsync(id);
+            if (activeConversationId === id) {
+                setSelectedId('new');
+            }
+            toast.success(language === 'uz' ? "Suhbat o‘chirildi" : "Conversation deleted");
+        } catch {
+            toast.error(language === 'uz' ? "O‘chirishda xatolik" : "Failed to delete");
+        }
     }
 
     if (isConversationsError) {
@@ -143,9 +166,9 @@ export function AIChat() {
                             {translations.aiChat.historyTitle}
                         </CardTitle>
                         <Button
-                            variant='outline'
+                            variant={selectedId === 'new' ? 'default' : 'outline'}
                             size='sm'
-                            className='h-8 gap-1 text-xs'
+                            className='h-8 gap-1.5 text-xs font-medium cursor-pointer shadow-xs'
                             onClick={handleStartNewChat}
                         >
                             <MessageSquarePlus className='size-3.5' />
@@ -165,20 +188,40 @@ export function AIChat() {
                         </p>
                     ) : (
                         <div className='max-h-[500px] overflow-y-auto space-y-1 pr-1'>
-                            {conversations.map((item) => (
-                                <button
-                                    key={item.id}
-                                    type='button'
-                                    className={`w-full truncate rounded-lg px-3 py-2 text-left text-xs transition-colors hover:bg-muted ${
-                                        item.id === activeConversationId
-                                            ? 'bg-primary/10 font-semibold text-primary'
-                                            : 'text-muted-foreground'
-                                    }`}
-                                    onClick={() => setConversationId(item.id)}
-                                >
-                                    {item.title ?? translations.aiChat.newChatDefaultTitle}
-                                </button>
-                            ))}
+                            {conversations.map((item) => {
+                                const isActive = selectedId !== 'new' && item.id === activeConversationId;
+                                return (
+                                    <div
+                                        key={item.id}
+                                        role='button'
+                                        tabIndex={0}
+                                        className={`group flex items-center justify-between gap-2 rounded-xl px-3 py-2 text-xs transition-all cursor-pointer ${
+                                            isActive
+                                                ? 'bg-primary/10 font-semibold text-primary'
+                                                : 'text-muted-foreground hover:bg-muted hover:text-foreground'
+                                        }`}
+                                        onClick={() => setSelectedId(item.id)}
+                                        onKeyDown={(e) => {
+                                            if (e.key === 'Enter' || e.key === ' ') {
+                                                setSelectedId(item.id);
+                                            }
+                                        }}
+                                    >
+                                        <div className='flex items-center gap-2 min-w-0 truncate'>
+                                            <MessageSquare className={`size-3.5 shrink-0 ${isActive ? 'text-primary' : 'text-muted-foreground'}`} />
+                                            <span className='truncate'>{item.title || translations.aiChat.newChatDefaultTitle}</span>
+                                        </div>
+                                        <button
+                                            type='button'
+                                            title={language === 'uz' ? "O‘chirish" : "Delete"}
+                                            className='opacity-0 group-hover:opacity-100 hover:text-destructive p-1 rounded-md transition-all shrink-0 cursor-pointer'
+                                            onClick={(e) => handleDeleteChat(e, item.id)}
+                                        >
+                                            <Trash2 className='size-3.5' />
+                                        </button>
+                                    </div>
+                                );
+                            })}
                         </div>
                     )}
                 </CardContent>
@@ -209,6 +252,7 @@ export function AIChat() {
                             <span className='hidden sm:inline'>{translations.aiChat.historyTitle}</span>
                         </Button>
                         <Button
+                            variant={selectedId === 'new' ? 'default' : 'outline'}
                             size='sm'
                             className='h-8 text-xs gap-1'
                             onClick={handleStartNewChat}
@@ -233,23 +277,44 @@ export function AIChat() {
                                     {translations.aiChat.emptyHistory}
                                 </p>
                             ) : (
-                                conversations.map((item) => (
-                                    <button
-                                        key={item.id}
-                                        type='button'
-                                        className={`w-full truncate rounded-lg px-3 py-2 text-left text-xs transition-colors hover:bg-muted ${
-                                            item.id === activeConversationId
-                                                ? 'bg-primary/10 font-semibold text-primary'
-                                                : 'text-muted-foreground'
-                                        }`}
-                                        onClick={() => {
-                                            setConversationId(item.id);
-                                            setMobileHistoryOpen(false);
-                                        }}
-                                    >
-                                        {item.title ?? translations.aiChat.newChatDefaultTitle}
-                                    </button>
-                                ))
+                                conversations.map((item) => {
+                                    const isActive = selectedId !== 'new' && item.id === activeConversationId;
+                                    return (
+                                        <div
+                                            key={item.id}
+                                            role='button'
+                                            tabIndex={0}
+                                            className={`flex items-center justify-between gap-2 rounded-lg px-3 py-2 text-xs transition-colors cursor-pointer ${
+                                                isActive
+                                                    ? 'bg-primary/10 font-semibold text-primary'
+                                                    : 'text-muted-foreground hover:bg-muted'
+                                            }`}
+                                            onClick={() => {
+                                                setSelectedId(item.id);
+                                                setMobileHistoryOpen(false);
+                                            }}
+                                            onKeyDown={(e) => {
+                                                if (e.key === 'Enter' || e.key === ' ') {
+                                                    setSelectedId(item.id);
+                                                    setMobileHistoryOpen(false);
+                                                }
+                                            }}
+                                        >
+                                            <div className='flex items-center gap-2 min-w-0 truncate'>
+                                                <MessageSquare className='size-3.5 shrink-0' />
+                                                <span className='truncate'>{item.title ?? translations.aiChat.newChatDefaultTitle}</span>
+                                            </div>
+                                            <button
+                                                type='button'
+                                                title={language === 'uz' ? "O‘chirish" : "Delete"}
+                                                className='text-muted-foreground hover:text-destructive p-1 rounded-md shrink-0 cursor-pointer'
+                                                onClick={(e) => handleDeleteChat(e, item.id)}
+                                            >
+                                                <Trash2 className='size-3.5' />
+                                            </button>
+                                        </div>
+                                    );
+                                })
                             )}
                         </CardContent>
                     </Card>

@@ -100,3 +100,20 @@ export function useSendAIMessage() {
         },
     });
 }
+
+export function useDeleteAIConversation() {
+    const queryClient = useQueryClient();
+
+    return useMutation({
+        mutationFn: async (conversationId: string) => {
+            const { data } = await axios.delete(`/api/ai/conversations/${conversationId}`);
+            return data;
+        },
+        onSuccess: () => {
+            queryClient.invalidateQueries({
+                queryKey: ['ai', 'conversations'],
+            });
+        },
+    });
+}
+

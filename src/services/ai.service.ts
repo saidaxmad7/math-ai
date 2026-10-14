@@ -2,7 +2,7 @@ import { AIContextType, AIMessageRole } from '@prisma/client';
 
 import { AI_MAX_HISTORY_MESSAGES } from '@/constants/ai';
 import { buildLessonAIContext } from '@/lib/ai/context';
-import { getDefaultConversationTitle } from '@/lib/ai/conversation';
+import { getDefaultConversationTitle, generateTopicTitle } from '@/lib/ai/conversation';
 import { aiProvider, type AIProviderMessage } from '@/lib/ai/provider';
 import { buildMathTutorPrompt } from '@/lib/ai/system-prompt';
 import {
@@ -12,6 +12,8 @@ import {
     findConversations,
     findLessonAIContext,
     touchConversation,
+    updateConversationTitle,
+    deleteConversation,
 } from '@/repositories/ai.repository';
 import type { SendAIMessageInput } from '@/validations/ai.validation';
 
@@ -96,19 +98,69 @@ async function getOrCreateConversation(
             throw new Error('Conversation not found.');
         }
 
+        // Agar mavjud suhbatning sarlavhasi hali ham 'Yangi suhbat' bo'lsa, uni ushbu savolga moslab yangilaymiz
+        if (
+            !conversation.title ||
+            conversation.title === 'Yangi suhbat' ||
+            conversation.title === 'New chat'
+        ) {
+            let lessonTitle: string | undefined;
+            if (conversation.contextId) {
+                const lesson = await findLessonAIContext(conversation.contextId);
+                lessonTitle = lesson?.title;
+            }
+            const updatedTitle = generateTopicTitle(input.content, lessonTitle);
+            conversation.title = updatedTitle;
+            void updateConversationTitle(conversation.id, updatedTitle).catch(() => {});
+        }
+
         return conversation;
     }
 
+    // Yangi suhbat yaratilganda unga birinchi savol asosida aniq mavzu beramiz
+    let lessonTitle: string | undefined;
+    if (input.contextId) {
+        const lesson = await findLessonAIContext(input.contextId);
+        lessonTitle = lesson?.title;
+    }
+    const dynamicTitle = generateTopicTitle(input.content, lessonTitle);
+
     return createConversation({
         userId,
-        title: getDefaultConversationTitle(),
+        title: dynamicTitle,
         contextType: input.contextType,
         contextId: input.contextId,
     });
 }
 
 export async function getAIConversations(userId: string) {
-    return findConversations(userId);
+    const conversations = await findConversations(userId);
+
+    // Bazadagi barcha eski 'Yangi suhbat' nomli suhbatlarning mavzusini avtomatik tiklash
+    for (const conv of conversations) {
+        if (!conv.title || conv.title === 'Yangi suhbat' || conv.title === 'New chat') {
+            const firstUserMessage = conv.messages.find((m) => m.role === AIMessageRole.USER);
+            if (firstUserMessage) {
+                let lessonTitle: string | undefined;
+                if (conv.contextId) {
+                    const lesson = await findLessonAIContext(conv.contextId);
+                    lessonTitle = lesson?.title;
+                }
+                const newTitle = generateTopicTitle(firstUserMessage.content, lessonTitle);
+                conv.title = newTitle;
+                void updateConversationTitle(conv.id, newTitle).catch(() => {});
+            }
+        }
+    }
+
+    return conversations;
+}
+
+export async function removeAIConversation(
+    userId: string,
+    conversationId: string,
+) {
+    return deleteConversation(userId, conversationId);
 }
 
 export async function getAIConversation(

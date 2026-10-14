@@ -1,7 +1,7 @@
 import { auth } from '@/auth';
 import { errorResponse, successResponse } from '@/lib/api/response';
 import { toAIConversationResponse } from '@/mappers/ai.mapper';
-import { getAIConversation } from '@/services/ai.service';
+import { getAIConversation, removeAIConversation } from '@/services/ai.service';
 
 type ConversationRouteContext = {
     params: Promise<{
@@ -39,5 +39,25 @@ export async function GET(
         }
 
         return errorResponse();
+    }
+}
+
+export async function DELETE(
+    _request: Request,
+    { params }: ConversationRouteContext,
+) {
+    try {
+        const session = await auth();
+
+        if (!session?.user?.id) {
+            return errorResponse('Unauthorized.', 401);
+        }
+
+        const { conversationId } = await params;
+        await removeAIConversation(session.user.id, conversationId);
+
+        return successResponse(null, 'Conversation deleted successfully.');
+    } catch (error) {
+        return errorResponse(error instanceof Error ? error.message : undefined);
     }
 }

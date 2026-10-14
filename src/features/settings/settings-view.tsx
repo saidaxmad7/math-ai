@@ -26,6 +26,8 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Switch } from '@/components/ui/switch';
 import { useLanguage } from '@/i18n/language-context';
+import { cn } from '@/lib/utils';
+import { UzbekistanFlag, UKFlag } from '@/components/common/flag-icons';
 
 export function SettingsView() {
     const { data: session } = useSession();
@@ -58,8 +60,8 @@ export function SettingsView() {
         setLanguage(newLang);
         toast.success(
             newLang === 'uz'
-                ? "Til o'zgartirildi: O'zbekcha 🇺🇿"
-                : "Language changed to English 🇬🇧"
+                ? "Til o'zgartirildi: O'zbekcha"
+                : "Language changed to English"
         );
     };
 
@@ -83,7 +85,7 @@ export function SettingsView() {
             </div>
 
             {/* Til sozlamalari (Language Settings) - Profil sahifasida qulay boshqaruv */}
-            <Card className='border-primary/20 bg-linear-to-br from-primary/5 via-card to-card shadow-sm'>
+            <Card className='border-primary/20 bg-linear-to-br from-primary/[0.04] via-card to-card shadow-xs'>
                 <CardHeader>
                     <div className='flex items-center gap-3'>
                         <div className='flex size-10 items-center justify-center rounded-xl bg-primary text-primary-foreground shadow-xs'>
@@ -100,35 +102,91 @@ export function SettingsView() {
                     </div>
                 </CardHeader>
                 <CardContent className='space-y-4'>
-                    <p className='text-sm font-semibold'>
+                    <p className='text-sm font-semibold text-foreground'>
                         {translations.settings.chooseLanguage}
                     </p>
-                    <div className='grid grid-cols-1 sm:grid-cols-2 gap-3 sm:max-w-md'>
-                        <Button
-                            type='button'
-                            variant={language === 'uz' ? 'default' : 'outline'}
-                            className='h-14 font-semibold text-sm flex items-center justify-between px-4 transition-all duration-200'
+                    <div className='grid grid-cols-1 sm:grid-cols-2 gap-3.5 max-w-xl'>
+                        {/* O'zbekcha Card */}
+                        <div
+                            role='button'
+                            tabIndex={0}
                             onClick={() => handleLanguageChange('uz')}
+                            onKeyDown={(e) => e.key === 'Enter' && handleLanguageChange('uz')}
+                            className={cn(
+                                'group relative flex items-center justify-between rounded-2xl border p-4 transition-all duration-200 cursor-pointer select-none',
+                                language === 'uz'
+                                    ? 'border-primary bg-primary/[0.06] shadow-xs ring-1 ring-primary/40'
+                                    : 'border-border/70 bg-card hover:border-primary/40 hover:bg-muted/40'
+                            )}
                         >
-                            <span className='flex items-center gap-2.5'>
-                                <span className='text-2xl'>🇺🇿</span>
-                                <span>O&apos;zbekcha (Lotin)</span>
-                            </span>
-                            {language === 'uz' && <CheckCircle2 className='size-5 text-white' />}
-                        </Button>
+                            <div className='flex items-center gap-3.5'>
+                                <UzbekistanFlag className='size-9 shadow-sm' />
+                                <div>
+                                    <div className='flex items-center gap-2'>
+                                        <span className='font-semibold text-sm text-foreground'>
+                                            O&apos;zbekcha
+                                        </span>
+                                        <span className='rounded-md bg-muted px-1.5 py-0.5 text-[10px] font-mono font-bold text-muted-foreground'>
+                                            UZ
+                                        </span>
+                                    </div>
+                                    <p className='text-xs text-muted-foreground mt-0.5'>
+                                        Lotin yozuvi • AI o&apos;zbek tilida
+                                    </p>
+                                </div>
+                            </div>
+                            <div
+                                className={cn(
+                                    'flex size-5 shrink-0 items-center justify-center rounded-full border transition-all',
+                                    language === 'uz'
+                                        ? 'border-primary bg-primary text-primary-foreground'
+                                        : 'border-muted-foreground/30'
+                                )}
+                            >
+                                {language === 'uz' && <CheckCircle2 className='size-3.5' />}
+                            </div>
+                        </div>
 
-                        <Button
-                            type='button'
-                            variant={language === 'en' ? 'default' : 'outline'}
-                            className='h-14 font-semibold text-sm flex items-center justify-between px-4 transition-all duration-200'
+                        {/* English Card */}
+                        <div
+                            role='button'
+                            tabIndex={0}
                             onClick={() => handleLanguageChange('en')}
+                            onKeyDown={(e) => e.key === 'Enter' && handleLanguageChange('en')}
+                            className={cn(
+                                'group relative flex items-center justify-between rounded-2xl border p-4 transition-all duration-200 cursor-pointer select-none',
+                                language === 'en'
+                                    ? 'border-primary bg-primary/[0.06] shadow-xs ring-1 ring-primary/40'
+                                    : 'border-border/70 bg-card hover:border-primary/40 hover:bg-muted/40'
+                            )}
                         >
-                            <span className='flex items-center gap-2.5'>
-                                <span className='text-2xl'>🇬🇧</span>
-                                <span>English</span>
-                            </span>
-                            {language === 'en' && <CheckCircle2 className='size-5 text-white' />}
-                        </Button>
+                            <div className='flex items-center gap-3.5'>
+                                <UKFlag className='size-9 shadow-sm' />
+                                <div>
+                                    <div className='flex items-center gap-2'>
+                                        <span className='font-semibold text-sm text-foreground'>
+                                            English
+                                        </span>
+                                        <span className='rounded-md bg-muted px-1.5 py-0.5 text-[10px] font-mono font-bold text-muted-foreground'>
+                                            EN
+                                        </span>
+                                    </div>
+                                    <p className='text-xs text-muted-foreground mt-0.5'>
+                                        International • AI in English
+                                    </p>
+                                </div>
+                            </div>
+                            <div
+                                className={cn(
+                                    'flex size-5 shrink-0 items-center justify-center rounded-full border transition-all',
+                                    language === 'en'
+                                        ? 'border-primary bg-primary text-primary-foreground'
+                                        : 'border-muted-foreground/30'
+                                )}
+                            >
+                                {language === 'en' && <CheckCircle2 className='size-3.5' />}
+                            </div>
+                        </div>
                     </div>
                 </CardContent>
             </Card>

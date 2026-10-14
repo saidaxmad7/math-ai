@@ -47,20 +47,26 @@ async function fetchAIConversation(
 async function sendAIMessage(
     input: SendAIMessageInput,
 ): Promise<AIConversationResponse> {
-    const customKey = typeof window !== 'undefined' ? localStorage.getItem('math_gemini_api_key') : null;
-    const { data } = await axios.post<AIConversationApiResponse>(
-        '/api/ai/conversations',
-        { ...input, stream: false },
-        {
-            headers: customKey ? { 'x-gemini-api-key': customKey } : undefined,
-        },
-    );
+    try {
+        const { data } = await axios.post<AIConversationApiResponse>(
+            '/api/ai/conversations',
+            { ...input, stream: false },
+        );
 
-    if (!data.success) {
-        throw new Error(data.message ?? 'AI response failed');
+        if (!data.success) {
+            throw new Error(data.message ?? 'AI response failed');
+        }
+
+        return data.data;
+    } catch (err: unknown) {
+        if (axios.isAxiosError(err)) {
+            const serverMsg = err.response?.data?.message;
+            if (serverMsg) {
+                throw new Error(serverMsg);
+            }
+        }
+        throw err;
     }
-
-    return data.data;
 }
 
 export function useAIConversations() {

@@ -80,24 +80,17 @@ export function InLessonAITutor({
         setIsLoading(true);
 
         try {
-            const customKey = typeof window !== 'undefined' ? localStorage.getItem('math_gemini_api_key') : null;
-            const headers: Record<string, string> = {
-                'Content-Type': 'application/json',
-            };
-            if (customKey) {
-                headers['x-gemini-api-key'] = customKey;
-            }
-
             const res = await fetch('/api/ai/conversations', {
                 method: 'POST',
-                headers,
+                headers: {
+                    'Content-Type': 'application/json',
+                },
                 body: JSON.stringify({
                     conversationId,
                     content: text,
                     contextType: 'LESSON',
                     contextId: lessonId,
                     language,
-                    ...(customKey ? { customApiKey: customKey } : {}),
                 }),
             });
 

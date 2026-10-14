@@ -42,20 +42,13 @@ export function GeminiByokCard() {
     const [testSuccess, setTestSuccess] = useState<boolean | null>(null);
     const [copiedUrl, setCopiedUrl] = useState(false);
 
-    // Initial load from server and localStorage
+    // Initial load from server (DB is the source of truth per user)
     useEffect(() => {
         let isMounted = true;
 
         async function fetchKeyStatus() {
             try {
-                // Check localStorage first
-                const localKey = localStorage.getItem('math_gemini_api_key');
-                if (localKey && localKey.trim()) {
-                    setHasCustomKey(true);
-                    setMaskedKey(`${localKey.slice(0, 6)}••••••••${localKey.slice(-4)}`);
-                }
-
-                // Check DB status
+                // Check DB status for the current logged-in user
                 const res = await fetch('/api/user/gemini-key');
                 if (res.ok) {
                     const data = await res.json();
@@ -63,9 +56,13 @@ export function GeminiByokCard() {
                         if (data.data.hasCustomKey) {
                             setHasCustomKey(true);
                             setMaskedKey(data.data.maskedKey);
-                        } else if (!localKey) {
+                        } else {
+                            // Current user has no key in DB -> strictly ensure state is cleared
                             setHasCustomKey(false);
                             setMaskedKey(null);
+                            if (typeof window !== 'undefined') {
+                                localStorage.removeItem('math_gemini_api_key');
+                            }
                         }
                     }
                 }
@@ -85,11 +82,11 @@ export function GeminiByokCard() {
 
     // Kalitni sinovdan o'tkazish
     const handleTestKey = async () => {
-        const keyToTest = apiKey.trim() || (typeof window !== 'undefined' ? localStorage.getItem('math_gemini_api_key') : '');
+        const keyToTest = apiKey.trim();
         if (!keyToTest) {
             toast.error(
                 language === 'uz'
-                    ? "Tekshirish uchun avval Gemini API kalitini kiriting."
+                    ? "Tekshirish uchun avval maydonga Gemini API kalitini kiriting."
                     : "Please enter a Gemini API key first to test."
             );
             return;

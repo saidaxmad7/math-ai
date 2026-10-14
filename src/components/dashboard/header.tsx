@@ -87,11 +87,14 @@ export function Header() {
                     size="icon"
                     className="h-9 w-9 shrink-0 text-muted-foreground hover:text-destructive hover:bg-destructive/10"
                     title="Chiqish / Sign out"
-                    onClick={() =>
+                    onClick={() => {
+                        if (typeof window !== 'undefined') {
+                            localStorage.removeItem('math_gemini_api_key');
+                        }
                         signOut({
                             callbackUrl: "/login",
-                        })
-                    }
+                        });
+                    }}
                 >
                     <LogOut className="h-4 w-4 sm:h-5 sm:w-5" />
                 </Button>

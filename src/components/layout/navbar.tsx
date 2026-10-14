@@ -223,6 +223,9 @@ export function Navbar() {
                                             <button
                                                 type='button'
                                                 onClick={() => {
+                                                    if (typeof window !== 'undefined') {
+                                                        localStorage.removeItem('math_gemini_api_key');
+                                                    }
                                                     void signOut({
                                                         callbackUrl: "/",
                                                     });

@@ -279,4 +279,32 @@ export interface Translations {
         loadError: string;
         newChatDefaultTitle: string;
     };
+    auth: {
+        signInTitle: string;
+        signInSubtitle: string;
+        signUpTitle: string;
+        signUpSubtitle: string;
+        tabSignIn: string;
+        tabSignUp: string;
+        googleSignIn: string;
+        orWithEmail: string;
+        nameLabel: string;
+        namePlaceholder: string;
+        emailLabel: string;
+        emailPlaceholder: string;
+        passwordLabel: string;
+        passwordPlaceholder: string;
+        signInBtn: string;
+        signUpBtn: string;
+        noAccountPrompt: string;
+        haveAccountPrompt: string;
+        roleStudent: string;
+        roleTeacher: string;
+        roleTeacherNote: string;
+        teacherCodeLabel: string;
+        teacherCodePlaceholder: string;
+        teacherCodeHelp: string;
+        invalidCredentials: string;
+        accountCreatedSuccess: string;
+    };
 }

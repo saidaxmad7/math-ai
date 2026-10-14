@@ -1,7 +1,19 @@
 'use client';
 
 import { useState } from 'react';
-import { Bot, MessageSquarePlus, Sparkles, Loader2, History, ChevronDown } from 'lucide-react';
+import Link from 'next/link';
+import {
+    Bot,
+    MessageSquarePlus,
+    Sparkles,
+    Loader2,
+    History,
+    ChevronDown,
+    KeyRound,
+    Settings,
+    ArrowRight,
+    AlertTriangle,
+} from 'lucide-react';
 
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -285,9 +297,36 @@ export function AIChat() {
                 )}
 
                 {sendMessage.isError && (
-                    <p className='text-xs text-destructive rounded-lg border border-destructive/20 bg-destructive/10 p-3'>
-                        {sendMessage.error.message || 'Error occurred.'}
-                    </p>
+                    <div className='flex flex-col sm:flex-row sm:items-center justify-between gap-3.5 rounded-2xl border border-amber-500/30 bg-amber-500/[0.08] p-4 text-xs shadow-xs animate-in fade-in duration-200'>
+                        <div className='flex items-start gap-3'>
+                            <div className='flex size-9 shrink-0 items-center justify-center rounded-xl bg-amber-500/15 text-amber-600 dark:text-amber-400'>
+                                <KeyRound className='size-4' />
+                            </div>
+                            <div className='space-y-1 text-left'>
+                                <p className='font-bold text-foreground text-sm'>
+                                    {language === 'uz' ? 'Google Gemini API kaliti kerak' : 'Google Gemini API Key Required'}
+                                </p>
+                                <p className='text-muted-foreground leading-relaxed'>
+                                    {sendMessage.error.message || (
+                                        language === 'uz'
+                                            ? "AI bilan to‘liq suhbatlashish uchun Sozlamalar sahifasida o‘zingizning bepul Gemini API kalitingizni ulang (atigi 1 daqiqa vaqt oladi)."
+                                            : "Please connect your free Google Gemini API key in Settings to chat with AI (takes 1 minute)."
+                                    )}
+                                </p>
+                            </div>
+                        </div>
+
+                        <div className='flex items-center gap-2 shrink-0 self-end sm:self-center'>
+                            <Link
+                                href='/dashboard/settings'
+                                className='inline-flex items-center gap-1.5 rounded-xl bg-primary px-3.5 py-2 text-xs font-semibold text-primary-foreground shadow-xs hover:bg-primary/90 transition-all cursor-pointer'
+                            >
+                                <Settings className='size-3.5' />
+                                <span>{language === 'uz' ? 'Sozlamalarga o‘tish' : 'Go to Settings'}</span>
+                                <ArrowRight className='size-3.5' />
+                            </Link>
+                        </div>
+                    </div>
                 )}
 
                 <AIComposer

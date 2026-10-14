@@ -372,7 +372,12 @@ export function SettingsView() {
                     <Button
                         variant='destructive'
                         className='gap-2'
-                        onClick={() => signOut({ callbackUrl: '/login' })}
+                        onClick={() => {
+                            if (typeof window !== 'undefined') {
+                                localStorage.removeItem('math_gemini_api_key');
+                            }
+                            signOut({ callbackUrl: '/login' });
+                        }}
                     >
                         <LogOut className='size-4' />
                         {translations.settings.signOutBtn}

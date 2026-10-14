@@ -205,6 +205,8 @@ export interface Translations {
         apiKeyWatchVideo: string;
         apiKeyReadSteps: string;
         apiKeyOpenAIStudio: string;
+        apiKeyVideoFallback: string;
+        apiKeyOpenYouTube: string;
     };
     practice: {
         title: string;

@@ -209,6 +209,8 @@ export const uz: Translations = {
         apiKeyWatchVideo: 'Video qo\'llanmani ko\'rish',
         apiKeyReadSteps: 'Yozma yo\'riqnoma',
         apiKeyOpenAIStudio: 'Google AI Studio\'ga o\'tish (Kalit olish)',
+        apiKeyVideoFallback: 'Agar video pleyerda cheklov bo‘lsa, YouTube orqali to‘g‘ridan-to‘g‘ri ko‘ring yoki Yozma yo‘riqnomani oching.',
+        apiKeyOpenYouTube: 'YouTube’da ko‘rish',
     },
     practice: {
         title: 'AI Amaliyot va Mashqlar',

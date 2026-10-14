@@ -449,28 +449,41 @@ export function GeminiByokCard() {
                         <div className='space-y-3 animate-in fade-in-50 duration-200'>
                             <div className='relative aspect-video w-full rounded-2xl overflow-hidden border bg-neutral-950 shadow-md ring-1 ring-border/50'>
                                 <iframe
-                                    src='https://www.youtube-nocookie.com/embed/oZzeMPhWq_g?rel=0&modestbranding=1'
-                                    title='Google Gemini API Key Tutorial'
+                                    src='https://www.youtube.com/embed/JdKcFCLotZY?rel=0'
+                                    title='Get Your Gemini API Key in Google AI Studio - Official Google Cloud'
                                     allow='accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share'
                                     allowFullScreen
                                     className='absolute inset-0 size-full border-0'
                                 />
                             </div>
-                            <div className='flex flex-wrap items-center justify-between gap-2 text-xs text-muted-foreground px-1'>
-                                <span>
-                                    {language === 'uz'
-                                        ? 'Videoda Google AI Studio orqali bepul API kalit olish 1 daqiqada ko‘rsatilgan.'
-                                        : 'The video demonstrates how to get a free API key in Google AI Studio within 1 minute.'}
-                                </span>
-                                <a
-                                    href='https://aistudio.google.com/app/apikey'
-                                    target='_blank'
-                                    rel='noopener noreferrer'
-                                    className='inline-flex items-center gap-1 font-semibold text-primary hover:underline'
-                                >
-                                    {t.apiKeyOpenAIStudio}
-                                    <ExternalLink className='size-3' />
-                                </a>
+
+                            {/* YouTube to'g'ridan-to'g'ri havola va ogohlantirish */}
+                            <div className='flex flex-col sm:flex-row sm:items-center justify-between gap-3 rounded-xl border border-border/80 bg-muted/40 p-3 text-xs'>
+                                <div className='flex items-center gap-2 text-muted-foreground'>
+                                    <AlertTriangle className='size-4 text-amber-500 shrink-0' />
+                                    <span>{t.apiKeyVideoFallback}</span>
+                                </div>
+                                <div className='flex items-center gap-2 shrink-0'>
+                                    <a
+                                        href='https://www.youtube.com/watch?v=JdKcFCLotZY'
+                                        target='_blank'
+                                        rel='noopener noreferrer'
+                                        className='inline-flex items-center gap-1.5 rounded-lg bg-red-600 hover:bg-red-700 text-white font-semibold px-3 py-1.5 text-xs transition-colors shadow-xs'
+                                    >
+                                        <Video className='size-3.5' />
+                                        {t.apiKeyOpenYouTube}
+                                        <ExternalLink className='size-3' />
+                                    </a>
+                                    <a
+                                        href='https://aistudio.google.com/app/apikey'
+                                        target='_blank'
+                                        rel='noopener noreferrer'
+                                        className='inline-flex items-center gap-1.5 rounded-lg bg-primary hover:bg-primary/90 text-primary-foreground font-semibold px-3 py-1.5 text-xs transition-colors shadow-xs'
+                                    >
+                                        {t.apiKeyOpenAIStudio}
+                                        <ExternalLink className='size-3' />
+                                    </a>
+                                </div>
                             </div>
                         </div>
                     )}

@@ -209,6 +209,8 @@ export const en: Translations = {
         apiKeyWatchVideo: 'Watch Video Tutorial',
         apiKeyReadSteps: 'Step-by-step Guide',
         apiKeyOpenAIStudio: 'Open Google AI Studio (Get Key)',
+        apiKeyVideoFallback: 'If the embedded video is restricted by your browser or region, open directly on YouTube or use the Step-by-step guide.',
+        apiKeyOpenYouTube: 'Watch on YouTube',
     },
     practice: {
         title: 'AI Practice & Quizzes',

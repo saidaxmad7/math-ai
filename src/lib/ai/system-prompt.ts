@@ -1,7 +1,9 @@
-export function buildMathTutorPrompt(context?: string, language: 'uz' | 'en' = 'uz') {
+export function buildMathTutorPrompt(context?: string, language: 'uz' | 'en' | 'ru' = 'uz') {
     const langInstruction =
         language === 'en'
             ? 'Answer primarily in English (or in the language the student addresses you in) and teach the reasoning process instead of only giving an answer.'
+            : language === 'ru'
+            ? 'Answer primarily in Russian (or in the language the student addresses you in) and teach the reasoning process instead of only giving an answer.'
             : 'Answer primarily in Uzbek (or in the language the student addresses you in) and teach the reasoning process instead of only giving an answer.';
 
     const basePrompt = `You are an expert, encouraging mathematics tutor for students in grades 9-11.

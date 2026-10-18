@@ -1,4 +1,4 @@
-export type Language = 'uz' | 'en';
+export type Language = 'uz' | 'en' | 'ru';
 
 export interface Translations {
     common: {
@@ -26,6 +26,7 @@ export interface Translations {
         language: string;
         uzbek: string;
         english: string;
+        russian: string;
         actions: string;
         close: string;
     };

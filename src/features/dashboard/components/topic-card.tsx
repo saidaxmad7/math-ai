@@ -61,7 +61,7 @@ export function TopicCard({
             <div className='mt-4 flex items-center gap-2 pt-3 border-t text-xs font-medium text-primary'>
                 <BookOpen className='h-3.5 w-3.5' />
                 <span>
-                    {language === 'uz' ? 'Darsni o‘rganish' : 'Explore Lesson'}
+                    {language === 'uz' ? 'Darsni o‘rganish' : language === 'ru' ? 'Изучить урок' : 'Explore Lesson'}
                 </span>
             </div>
         </Link>

@@ -4,6 +4,7 @@ import React, { createContext, useContext, useEffect, useState, useMemo, useCall
 import { Language, Translations } from './types';
 import { uz } from './locales/uz';
 import { en } from './locales/en';
+import { ru } from './locales/ru';
 
 interface LanguageContextType {
     language: Language;
@@ -12,11 +13,13 @@ interface LanguageContextType {
     t: (key: string, fallback?: string) => string;
     isUz: boolean;
     isEn: boolean;
+    isRu: boolean;
 }
 
 const dictionaries: Record<Language, Translations> = {
     uz,
     en,
+    ru,
 };
 
 const LanguageContext = createContext<LanguageContextType | null>(null);
@@ -29,12 +32,12 @@ function getInitialLanguage(): Language {
 
     try {
         const stored = localStorage.getItem(STORAGE_KEY);
-        if (stored === 'uz' || stored === 'en') {
-            return stored;
+        if (stored === 'uz' || stored === 'en' || stored === 'ru') {
+            return stored as Language;
         }
 
         const match = document.cookie.match(new RegExp('(^| )' + COOKIE_KEY + '=([^;]+)'));
-        if (match && (match[2] === 'uz' || match[2] === 'en')) {
+        if (match && (match[2] === 'uz' || match[2] === 'en' || match[2] === 'ru')) {
             return match[2] as Language;
         }
     } catch {
@@ -98,6 +101,7 @@ export function LanguageProvider({ children }: { children: React.ReactNode }) {
             t,
             isUz: language === 'uz',
             isEn: language === 'en',
+            isRu: language === 'ru',
         }),
         [language, setLanguage, translations, t]
     );
@@ -120,6 +124,7 @@ export function useLanguage() {
             t: (key: string, fallback?: string) => fallback || key,
             isUz: true,
             isEn: false,
+            isRu: false,
         };
     }
     return context;

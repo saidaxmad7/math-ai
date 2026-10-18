@@ -39,7 +39,7 @@ export function QuickActionCard({
                     </div>
 
                     <div className='mt-6 flex items-center gap-2 text-sm font-medium text-primary'>
-                        <span>{language === 'uz' ? "O'tish" : "Open"}</span>
+                        <span>{language === 'uz' ? "O'tish" : language === 'ru' ? "Перейти" : "Open"}</span>
                         <ArrowRight className='h-4 w-4' />
                     </div>
                 </CardContent>

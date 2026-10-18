@@ -31,7 +31,7 @@ function toProviderRole(role: AIMessageRole): AIProviderMessage['role'] {
 function toProviderMessages(
     messages: { role: AIMessageRole; content: string }[],
     context?: string,
-    language: 'uz' | 'en' = 'uz',
+    language: 'uz' | 'en' | 'ru' = 'uz',
 ): AIProviderMessage[] {
     const compactMessages = messages
         .filter(

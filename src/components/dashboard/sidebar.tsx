@@ -130,8 +130,8 @@ export function Sidebar() {
                     className="flex items-center gap-3"
                     onClick={() => isMobile && closeMobile()}
                 >
-                    <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-primary text-base font-bold text-primary-foreground shadow-xs">
-                        ∑
+                    <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-gradient-to-tr from-violet-600 via-indigo-600 to-blue-600 text-white shadow-md shadow-indigo-950/30 ring-1 ring-white/20">
+                        <GraduationCap className="h-5 w-5 text-white" />
                     </div>
 
                     {(!collapsed || isMobile) && (

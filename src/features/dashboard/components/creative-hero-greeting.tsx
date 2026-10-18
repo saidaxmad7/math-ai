@@ -10,8 +10,10 @@ import { cn } from '@/lib/utils';
 
 type MathInsight = {
     tagUz: string;
+    tagRu: string;
     tagEn: string;
     textUz: string;
+    textRu: string;
     textEn: string;
     icon: typeof Sparkles;
 };
@@ -19,50 +21,64 @@ type MathInsight = {
 const MATH_INSIGHTS: MathInsight[] = [
     {
         tagUz: '💡 Qiziqarli fakt',
+        tagRu: '💡 Интересный факт',
         tagEn: '💡 Fun Fact',
         textUz: 'Al-Xorazmiy "Algebra" atamasini "Al-Jabr" (tiklash, tenglashtirish) so‘zidan kashf etgan. Siz buyuk allomalar vorisisiz!',
+        textRu: 'Аль-Хорезми ввел термин «Алгебра» от слова «Аль-Джабр» (восполнение, уравнивание). Вы продолжатели великих ученых!',
         textEn: 'Al-Khwarizmi derived the term "Algebra" from "Al-Jabr" (restoration and balancing). You follow the steps of legends!',
         icon: Sparkles,
     },
     {
         tagUz: '🧠 Fikr & Layfxak',
+        tagRu: '🧠 Мысль и Лайфхак',
         tagEn: '🧠 Brain Spark',
         textUz: 'Har bir yechilgan masala — miyangizda yangi neyron yo‘lini ochadi. Har kuni atigi 1 ta dars katta farq qiladi!',
+        textRu: 'Каждая решенная задача создает новые нейронные связи в мозгу. Всего 1 урок в день ведет к мастерству!',
         textEn: 'Every solved equation builds new neural pathways in your brain. Just 1 lesson a day creates compound mastery!',
         icon: Brain,
     },
     {
         tagUz: '🚀 Ilhom',
+        tagRu: '🚀 Вдохновение',
         tagEn: '🚀 Inspiration',
         textUz: 'Kvadrat tenglamani yechish — bu fazoga uchirilgan raketaning trayektoriyasini hisoblash bilan bir xil qudratga ega!',
+        textRu: 'Решение квадратных уравнений лежит в основе расчета траекторий космических ракет!',
         textEn: 'Solving quadratic equations is the foundation for calculating rocket trajectories into space!',
         icon: Zap,
     },
     {
         tagUz: '🎯 Kunning qoidasi',
+        tagRu: '🎯 Совет дня',
         tagEn: '🎯 Daily Tip',
         textUz: 'Xato qilishdan qo‘rqmang! Buyuk matematiklar yangi qonuniyatlarni aynan xatolarni tahlil qilish orqali topishgan.',
+        textRu: 'Не бойтесь ошибок! Великие математики открывали фундаментальные законы, именно анализируя ошибки.',
         textEn: "Don't fear mistakes! The greatest mathematical laws were discovered by investigating surprising errors.",
         icon: Target,
     },
     {
         tagUz: '🌌 Koinot tili',
+        tagRu: '🌌 Язык Вселенной',
         tagEn: '🌌 Universal Language',
         textUz: 'Galileo Galiley aytganidek: "Tabiat buyuk kitob bo‘lib, u faqat matematika tilida yozilgan".',
+        textRu: 'Как говорил Галилео Галилей: «Книга природы написана на языке математики».',
         textEn: 'As Galileo Galilei said: "Nature is a vast book written in the language of mathematics."',
         icon: Sparkles,
     },
     {
         tagUz: '📐 Geometriya siri',
+        tagRu: '📐 Секрет геометрии',
         tagEn: '📐 Geometry Secret',
         textUz: 'Pifagor teoremasi faqat uchburchak emas, balki 3D video o‘yinlar va kompyuter grafikasi fizikasining negizidir.',
+        textRu: 'Теорема Пифагора — это не просто треугольник, а основа 3D-видеоигр, компьютерной графики и физики.',
         textEn: 'The Pythagorean theorem is the bedrock of 3D video game engines, physics simulations, and GPS navigation.',
         icon: Brain,
     },
     {
         tagUz: '⏳ Kichik odat',
+        tagRu: '⏳ Сила привычки',
         tagEn: '⏳ Power of Habit',
         textUz: 'Kunda 15 daqiqa matematika — bir yilda 90 soatlik shaxsiy repetitor darsiga teng bilim beradi!',
+        textRu: '15 минут математики в день за год дают знания, равные 90 часам занятий с репетитором!',
         textEn: '15 minutes of math daily equals 90 hours of focused personal tutoring over a single year!',
         icon: Zap,
     },
@@ -84,27 +100,69 @@ export function CreativeHeroGreeting() {
     const getGreetingDetails = () => {
         const hour = new Date().getHours();
         const rawName = session?.user?.name || '';
-        const firstName = rawName.trim().split(' ')[0] || (language === 'uz' ? 'O‘quvchi' : 'Learner');
+        const fallbackName =
+            language === 'uz' ? 'O‘quvchi' : language === 'ru' ? 'Ученик' : 'Learner';
+        const firstName = rawName.trim().split(' ')[0] || fallbackName;
 
         if (hour >= 5 && hour < 12) {
             return {
-                title: language === 'uz' ? `Xayrli tong, ${firstName}! ☀️` : `Good morning, ${firstName}! ☀️`,
-                sub: language === 'uz' ? 'Bugungi kunni yangi matematik kashfiyotlar bilan boshlaymiz!' : 'Start your day with mathematical superpowers!',
+                title:
+                    language === 'uz'
+                        ? `Xayrli tong, ${firstName}! ☀️`
+                        : language === 'ru'
+                        ? `Доброе утро, ${firstName}! ☀️`
+                        : `Good morning, ${firstName}! ☀️`,
+                sub:
+                    language === 'uz'
+                        ? 'Bugungi kunni yangi matematik kashfiyotlar bilan boshlaymiz!'
+                        : language === 'ru'
+                        ? 'Начнем сегодняшний день с новых математических открытий!'
+                        : 'Start your day with mathematical superpowers!',
             };
         } else if (hour >= 12 && hour < 18) {
             return {
-                title: language === 'uz' ? `Kuningiz unumli o‘tsin, ${firstName}! ⚡️` : `Productive afternoon, ${firstName}! ⚡️`,
-                sub: language === 'uz' ? 'Miyani charxlash va misollar yechish uchun ajoyib vaqt!' : 'A fantastic time to sharpen your problem-solving skills!',
+                title:
+                    language === 'uz'
+                        ? `Kuningiz unumli o‘tsin, ${firstName}! ⚡️`
+                        : language === 'ru'
+                        ? `Продуктивного дня, ${firstName}! ⚡️`
+                        : `Productive afternoon, ${firstName}! ⚡️`,
+                sub:
+                    language === 'uz'
+                        ? 'Miyani charxlash va misollar yechish uchun ajoyib vaqt!'
+                        : language === 'ru'
+                        ? 'Отличное время для тренировки ума и решения задач!'
+                        : 'A fantastic time to sharpen your problem-solving skills!',
             };
         } else if (hour >= 18 && hour < 23) {
             return {
-                title: language === 'uz' ? `Xayrli oqshom, ${firstName}! 🌆` : `Good evening, ${firstName}! 🌆`,
-                sub: language === 'uz' ? 'Bugungi o‘rganganlaringizni mustahkamlab, AI bilan mashq qiling.' : 'Reinforce today’s achievements with interactive AI practice.',
+                title:
+                    language === 'uz'
+                        ? `Xayrli oqshom, ${firstName}! 🌆`
+                        : language === 'ru'
+                        ? `Добрый вечер, ${firstName}! 🌆`
+                        : `Good evening, ${firstName}! 🌆`,
+                sub:
+                    language === 'uz'
+                        ? 'Bugungi o‘rganganlaringizni mustahkamlab, AI bilan mashq qiling.'
+                        : language === 'ru'
+                        ? 'Закрепите сегодняшние успехи интерактивной практикой с AI.'
+                        : 'Reinforce today’s achievements with interactive AI practice.',
             };
         } else {
             return {
-                title: language === 'uz' ? `Tungi daho, ${firstName}! 🌌` : `Night owl genius, ${firstName}! 🌌`,
-                sub: language === 'uz' ? 'Tungi sokinlikda eng murakkab formulalar ham osonroq tushuniladi.' : 'In the calm of the night, profound concepts become crystal clear.',
+                title:
+                    language === 'uz'
+                        ? `Tungi daho, ${firstName}! 🌌`
+                        : language === 'ru'
+                        ? `Ночной гений, ${firstName}! 🌌`
+                        : `Night owl genius, ${firstName}! 🌌`,
+                sub:
+                    language === 'uz'
+                        ? 'Tungi sokinlikda eng murakkab formulalar ham osonroq tushuniladi.'
+                        : language === 'ru'
+                        ? 'В ночной тишине даже самые сложные формулы становятся понятнее.'
+                        : 'In the calm of the night, profound concepts become crystal clear.',
             };
         }
     };
@@ -118,6 +176,37 @@ export function CreativeHeroGreeting() {
     const greeting = getGreetingDetails();
     const currentInsight = MATH_INSIGHTS[insightIndex] || MATH_INSIGHTS[0];
     const InsightIcon = currentInsight.icon;
+
+    const insightTag =
+        language === 'uz'
+            ? currentInsight.tagUz
+            : language === 'ru'
+            ? currentInsight.tagRu
+            : currentInsight.tagEn;
+
+    const insightText =
+        language === 'uz'
+            ? currentInsight.textUz
+            : language === 'ru'
+            ? currentInsight.textRu
+            : currentInsight.textEn;
+
+    const shuffleTooltip =
+        language === 'uz'
+            ? 'Yangi fikr / fakt olish'
+            : language === 'ru'
+            ? 'Получить другой факт / мысль'
+            : 'Get another insight';
+
+    const startLearningText =
+        language === 'uz'
+            ? 'Darsni boshlash'
+            : language === 'ru'
+            ? 'Начать обучение'
+            : 'Start Learning';
+
+    const aiTutorText =
+        language === 'uz' ? 'AI Ustoz' : language === 'ru' ? 'AI Репетитор' : 'AI Tutor';
 
     return (
         <div className='relative overflow-hidden rounded-3xl border border-primary/20 bg-linear-to-br from-primary/[0.08] via-card to-card p-5 sm:p-7 lg:p-8 shadow-xs backdrop-blur-md transition-all'>
@@ -152,18 +241,18 @@ export function CreativeHeroGreeting() {
                         <div className='flex-1 min-w-0'>
                             <div className='flex items-center gap-2'>
                                 <span className='text-[10px] sm:text-xs font-bold uppercase tracking-wider text-primary'>
-                                    {language === 'uz' ? currentInsight.tagUz : currentInsight.tagEn}
+                                    {insightTag}
                                 </span>
                             </div>
                             <p className='mt-0.5 text-xs sm:text-sm text-foreground/90 leading-relaxed'>
-                                {language === 'uz' ? currentInsight.textUz : currentInsight.textEn}
+                                {insightText}
                             </p>
                         </div>
                         <button
                             type='button'
                             onClick={handleShuffleInsight}
                             className='flex size-8 shrink-0 items-center justify-center rounded-lg text-muted-foreground transition-all hover:bg-muted hover:text-foreground active:scale-95'
-                            title={language === 'uz' ? 'Yangi fikr / fakt olish' : 'Get another insight'}
+                            title={shuffleTooltip}
                             aria-label='Shuffle insight'
                         >
                             <Dices className={cn('size-4 transition-transform duration-300', isRotating && 'rotate-180')} />
@@ -175,7 +264,7 @@ export function CreativeHeroGreeting() {
                 <div className='flex flex-wrap items-center gap-2.5 sm:gap-3 shrink-0'>
                     <Link href='/dashboard/classes'>
                         <Button className='h-11 gap-2 rounded-2xl px-5 text-xs sm:text-sm font-semibold shadow-xs transition-all hover:scale-[1.02]'>
-                            <span>{language === 'uz' ? 'Darsni boshlash' : 'Start Learning'}</span>
+                            <span>{startLearningText}</span>
                             <ArrowRight className='size-4' />
                         </Button>
                     </Link>
@@ -183,7 +272,7 @@ export function CreativeHeroGreeting() {
                     <Link href='/dashboard/ai'>
                         <Button variant='outline' className='h-11 gap-2 rounded-2xl border-border/80 bg-background/80 px-4 text-xs sm:text-sm font-semibold shadow-2xs transition-all hover:bg-accent/60 hover:scale-[1.02]'>
                             <Sparkles className='size-4 text-primary' />
-                            <span>{language === 'uz' ? 'AI Ustoz' : 'AI Tutor'}</span>
+                            <span>{aiTutorText}</span>
                         </Button>
                     </Link>
                 </div>

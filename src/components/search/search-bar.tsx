@@ -154,7 +154,7 @@ export function SearchBar() {
                         <>
                             <div className='flex items-center gap-1.5 border-b bg-muted/60 px-3.5 py-2 text-[11px] font-bold uppercase tracking-wider text-muted-foreground'>
                                 <Layers className='h-3.5 w-3.5 text-primary' />
-                                <span>{language === 'uz' ? 'Mavzular' : 'Topics'}</span>
+                                <span>{language === 'uz' ? 'Mavzular' : language === 'ru' ? 'Темы' : 'Topics'}</span>
                             </div>
 
                             {topics.map((topic) => {
@@ -189,7 +189,7 @@ export function SearchBar() {
                         <>
                             <div className='flex items-center gap-1.5 border-b bg-muted/60 px-3.5 py-2 text-[11px] font-bold uppercase tracking-wider text-muted-foreground'>
                                 <BookOpen className='h-3.5 w-3.5 text-primary' />
-                                <span>{language === 'uz' ? 'Darslar' : 'Lessons'}</span>
+                                <span>{language === 'uz' ? 'Darslar' : language === 'ru' ? 'Уроки' : 'Lessons'}</span>
                             </div>
 
                             {lessons.map((lesson) => (

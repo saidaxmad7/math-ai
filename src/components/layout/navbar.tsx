@@ -6,6 +6,7 @@ import { signOut, useSession } from "next-auth/react";
 import { useEffect, useRef, useState } from "react";
 import {
     ChevronDown,
+    GraduationCap,
     LayoutDashboard,
     LogOut,
     Settings,
@@ -97,31 +98,61 @@ export function Navbar() {
         };
     }, [isOpen]);
 
+    const handleNavClick = (
+        e: React.MouseEvent<HTMLAnchorElement>,
+        href: string
+    ) => {
+        if (href.startsWith("#")) {
+            const targetId = href.replace("#", "");
+            const element = document.getElementById(targetId);
+            if (element) {
+                e.preventDefault();
+                const navbarOffset = 76;
+                const elementPosition = element.getBoundingClientRect().top;
+                const offsetPosition =
+                    elementPosition + window.pageYOffset - navbarOffset;
+
+                window.scrollTo({
+                    top: offsetPosition,
+                    behavior: "smooth",
+                });
+
+                window.history.pushState(null, "", href);
+            }
+        }
+    };
+
     return (
         <motion.header
             initial={{ y: -12, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             transition={{ duration: 0.4, ease: "easeOut" }}
-            className='sticky top-0 z-50 border-b border-white/10 bg-background/70 backdrop-blur-xl'
+            className='sticky top-0 z-50 border-b border-white/10 bg-slate-950/80 backdrop-blur-xl'
         >
             <Container className='flex h-16 items-center justify-between gap-4'>
-                <Link href='/' className='flex items-center gap-3'>
-                    <div className='flex h-10 w-10 items-center justify-center rounded-2xl bg-linear-to-br from-violet-500 via-fuchsia-500 to-indigo-500 text-lg font-bold text-white shadow-lg shadow-violet-950/20'>
-                        M
+                <Link href='/' className='group flex items-center gap-2.5'>
+                    <div className='flex h-10 w-10 items-center justify-center rounded-2xl bg-gradient-to-tr from-violet-600 via-indigo-600 to-blue-600 text-white shadow-lg shadow-indigo-950/40 ring-1 ring-white/20 transition-transform duration-200 group-hover:scale-105'>
+                        <GraduationCap className='h-5 w-5 text-white' />
                     </div>
 
-                    <span className='text-xl font-semibold tracking-tight text-foreground'>
-                        Math AI
-                    </span>
+                    <div className='flex items-center gap-1.5'>
+                        <span className='text-xl font-bold tracking-tight text-white'>
+                            Math <span className='bg-gradient-to-r from-violet-400 to-indigo-300 bg-clip-text text-transparent'>AI</span>
+                        </span>
+                        <span className='rounded-full border border-violet-400/30 bg-violet-500/10 px-1.5 py-0.5 text-[10px] font-semibold text-violet-300'>
+                            2.0
+                        </span>
+                    </div>
                 </Link>
 
                 <nav className='hidden flex-1 items-center justify-center md:flex'>
-                    <div className='flex items-center gap-6 rounded-full border border-white/10 bg-white/5 px-4 py-2 shadow-[0_0_0_1px_rgba(255,255,255,0.02)]'>
+                    <div className='flex items-center gap-1 rounded-full border border-white/10 bg-white/[0.06] p-1.5 transition-colors'>
                         {navItems.map((item) => (
                             <Link
                                 key={item.href}
                                 href={item.href}
-                                className='text-sm font-medium text-muted-foreground transition-colors duration-200 hover:text-foreground'
+                                onClick={(e) => handleNavClick(e, item.href)}
+                                className='rounded-full px-4 py-1.5 text-sm font-medium text-slate-300 transition-all duration-300 hover:bg-white/10 hover:text-white'
                             >
                                 {item.label}
                             </Link>
@@ -130,7 +161,7 @@ export function Navbar() {
                 </nav>
 
                 <div className='flex items-center gap-3'>
-                    <LanguageSwitcher />
+                    <LanguageSwitcher sideOffset={26} />
 
                     {status === "loading" ? (
                         <div className='h-9 w-24 animate-pulse rounded-full bg-muted/70' />
@@ -168,7 +199,7 @@ export function Navbar() {
                                         id='profile-popover'
                                         ref={panelRef}
                                         role='menu'
-                                        className='absolute right-0 z-50 mt-2 w-72 overflow-hidden rounded-3xl border border-white/10 bg-slate-950/95 p-4 shadow-2xl shadow-black/40 backdrop-blur-xl'
+                                        className='absolute right-0 z-50 mt-4 w-72 overflow-hidden rounded-3xl border border-white/10 bg-slate-950/95 p-4 shadow-2xl shadow-black/40 backdrop-blur-xl'
                                     >
                                         <div className='flex items-center gap-3 rounded-3xl bg-slate-900/70 p-3'>
                                             <Avatar
@@ -275,7 +306,10 @@ export function Navbar() {
                             <Link
                                 key={item.href}
                                 href={item.href}
-                                onClick={() => setMobileMenuOpen(false)}
+                                onClick={(e) => {
+                                    handleNavClick(e, item.href);
+                                    setMobileMenuOpen(false);
+                                }}
                                 className='rounded-xl px-3 py-2 text-sm font-medium text-slate-300 hover:bg-white/10 hover:text-white transition-colors'
                             >
                                 {item.label}

@@ -68,6 +68,25 @@ const SUGGESTED_PROMPTS_EN = [
     },
 ];
 
+const SUGGESTED_PROMPTS_RU = [
+    {
+        title: '📐 Теорема Пифагора',
+        prompt: 'Объясните теорему Пифагора и как находить гипотенузу в прямоугольном треугольнике на наглядном примере.',
+    },
+    {
+        title: '🔢 Квадратные уравнения и теорема Виета',
+        prompt: 'Покажите методы решения квадратных уравнений через дискриминант и теорему Виета с формулами.',
+    },
+    {
+        title: '📈 Геометрический смысл производной',
+        prompt: 'Что такое производная функции и в чем заключается ее геометрический смысл на графике?',
+    },
+    {
+        title: '🎲 Классическая вероятность',
+        prompt: 'Решите типовую задачу по формуле классической вероятности P(A) = m/n.',
+    },
+];
+
 export function AIChat() {
     const { translations, language } = useLanguage();
     const [selectedId, setSelectedId] = useState<string | 'new' | null>(null);
@@ -95,7 +114,12 @@ export function AIChat() {
             ? null
             : (conversation ?? conversations.find((item) => item.id === activeConversationId));
 
-    const prompts = language === 'uz' ? SUGGESTED_PROMPTS_UZ : SUGGESTED_PROMPTS_EN;
+    const prompts =
+        language === 'uz'
+            ? SUGGESTED_PROMPTS_UZ
+            : language === 'ru'
+            ? SUGGESTED_PROMPTS_RU
+            : SUGGESTED_PROMPTS_EN;
 
     async function handleSubmit(promptText?: string) {
         const textToSend = (promptText || content).trim();

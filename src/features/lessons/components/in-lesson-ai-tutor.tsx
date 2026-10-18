@@ -28,9 +28,11 @@ export function InLessonAITutor({
 }: InLessonAITutorProps) {
     const { translations, language } = useLanguage();
 
-    const getGreeting = (lang: 'uz' | 'en') =>
+    const getGreeting = (lang: 'uz' | 'en' | 'ru') =>
         lang === 'uz'
             ? `Salom! Men sizning **${gradeName} ${subjectName}** bo‘yicha AI ustozingizman. **«${lessonTitle}»** mavzusida tushunmagan biron bir joyingiz bormi? Quyidagi tayyor savollardan birini tanlashingiz yoki o‘z savolingizni yozishingiz mumkin!`
+            : lang === 'ru'
+            ? `Здравствуйте! Я ваш AI репетитор по **${gradeName} ${subjectName}**. Есть ли вопросы по теме **«${lessonTitle}»**? Выберите один из готовых вопросов ниже или напишите свой!`
             : `Hello! I am your AI math tutor for **${gradeName} ${subjectName}**. Do you have any questions regarding **"${lessonTitle}"**? Pick one of the suggested prompts below or ask anything!`;
 
     const [messages, setMessages] = useState<Message[]>([
@@ -62,6 +64,13 @@ export function InLessonAITutor({
                   `📐 Formulaning har bir belgisini soddaroq izohlab ber`,
                   `⚠️ Bu mavzuda eng ko‘p qilinadigan xatolar qaysilar?`,
                   `✍️ Menga qadam-baqadam yechiladigan yana 1 ta oson misol ko‘rsat`,
+              ]
+            : language === 'ru'
+            ? [
+                  `💡 Объясни эту тему на простом жизненном примере`,
+                  `📐 Объясни каждый символ в формуле простыми словами`,
+                  `⚠️ Какие самые частые ошибки допускают в этой теме?`,
+                  `✍️ Покажи еще один пошаговый пример решения задачи`,
               ]
             : [
                   `💡 Explain this topic with a simple real-life example`,

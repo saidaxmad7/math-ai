@@ -19,7 +19,7 @@ export const sendAIMessageSchema = z.object({
     stream: z.boolean().default(false),
     contextType: aiContextTypeSchema.default('CHAT'),
     contextId: z.string().trim().max(100).optional(),
-    language: z.enum(['uz', 'en']).default('uz'),
+    language: z.enum(['uz', 'en', 'ru']).default('uz'),
     customApiKey: z.string().trim().optional(),
 });
 

@@ -126,13 +126,15 @@ button {
     * {
         @apply border-border outline-ring/50;
     }
+    html {
+        @apply font-sans;
+        scroll-behavior: smooth;
+        scroll-padding-top: 5.5rem;
+    }
     html, body {
         @apply bg-background text-foreground;
         overflow-x: hidden;
         max-width: 100vw;
-    }
-    html {
-        @apply font-sans;
     }
     select {
         color-scheme: light;

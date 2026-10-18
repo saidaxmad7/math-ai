@@ -132,3 +132,48 @@ export function UKFlag({
         </svg>
     );
 }
+
+/**
+ * High-definition Vector Flag of the Russian Federation 🇷🇺
+ * Renders identically and crisp on all operating systems (Windows, macOS, Linux, iOS, Android).
+ */
+export function RussianFlag({
+    className,
+    variant = 'circle',
+    ...props
+}: FlagProps) {
+    const isCircle = variant === 'circle';
+
+    return (
+        <svg
+            viewBox='0 0 32 32'
+            aria-label='Russian Flag'
+            className={cn(
+                'shrink-0 shadow-2xs ring-1 ring-black/10 dark:ring-white/15',
+                isCircle ? 'rounded-full' : 'rounded-md',
+                className ?? 'size-5'
+            )}
+            {...props}
+        >
+            <defs>
+                <clipPath id='ru-flag-clip'>
+                    {isCircle ? (
+                        <circle cx='16' cy='16' r='16' />
+                    ) : (
+                        <rect width='32' height='32' rx='4' />
+                    )}
+                </clipPath>
+            </defs>
+
+            <g clipPath='url(#ru-flag-clip)'>
+                {/* White Stripe */}
+                <rect width='32' height='10.7' fill='#FFFFFF' />
+                {/* Blue Stripe */}
+                <rect y='10.7' width='32' height='10.7' fill='#0039A6' />
+                {/* Red Stripe */}
+                <rect y='21.4' width='32' height='10.7' fill='#D52B1E' />
+            </g>
+        </svg>
+    );
+}
+

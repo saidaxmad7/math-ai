@@ -62,6 +62,8 @@ function LoginForm() {
             setErrorMessage(
                 language === 'uz'
                     ? 'Google orqali kirishda xatolik yuz berdi.'
+                    : language === 'ru'
+                    ? 'Ошибка при входе через Google.'
                     : 'Failed to sign in with Google.'
             );
         }
@@ -77,6 +79,8 @@ function LoginForm() {
             setErrorMessage(
                 language === 'uz'
                     ? 'Iltimos, email va parolni to‘liq kiriting.'
+                    : language === 'ru'
+                    ? 'Пожалуйста, введите email и пароль.'
                     : 'Please enter both email and password.'
             );
             return;
@@ -96,6 +100,8 @@ function LoginForm() {
                 toast.success(
                     language === 'uz'
                         ? 'Xush kelibsiz! Tizimga muvaffaqiyatli kirdingiz.'
+                        : language === 'ru'
+                        ? 'Добро пожаловать! Вы успешно вошли в систему.'
                         : 'Welcome back! Signed in successfully.'
                 );
                 router.push('/dashboard');
@@ -109,6 +115,8 @@ function LoginForm() {
             setErrorMessage(
                 language === 'uz'
                     ? 'Tizimga kirishda xatolik yuz berdi.'
+                    : language === 'ru'
+                    ? 'Произошла ошибка при входе в систему.'
                     : 'An error occurred during sign in.'
             );
         }
@@ -126,6 +134,8 @@ function LoginForm() {
             setErrorMessage(
                 language === 'uz'
                     ? 'Iltimos, barcha maydonlarni to‘ldiring.'
+                    : language === 'ru'
+                    ? 'Пожалуйста, заполните все обязательные поля.'
                     : 'Please fill in all required fields.'
             );
             return;
@@ -135,6 +145,8 @@ function LoginForm() {
             setErrorMessage(
                 language === 'uz'
                     ? 'Parol kamida 6 ta belgidan iborat bo‘lishi kerak.'
+                    : language === 'ru'
+                    ? 'Пароль должен содержать не менее 6 символов.'
                     : 'Password must be at least 6 characters.'
             );
             return;
@@ -144,6 +156,8 @@ function LoginForm() {
             setErrorMessage(
                 language === 'uz'
                     ? 'O‘qituvchi / Admin maxfiy xavfsizlik kodini kiriting.'
+                    : language === 'ru'
+                    ? 'Введите секретный PIN-код учителя / администратора.'
                     : 'Please enter the teacher / admin security PIN.'
             );
             return;
@@ -168,7 +182,14 @@ function LoginForm() {
 
             if (!res.ok) {
                 setIsLoading(false);
-                setErrorMessage(data.message || (language === 'uz' ? 'Ro‘yxatdan o‘tib bo‘lmadi.' : 'Registration failed.'));
+                setErrorMessage(
+                    data.message ||
+                        (language === 'uz'
+                            ? 'Ro‘yxatdan o‘tib bo‘lmadi.'
+                            : language === 'ru'
+                            ? 'Не удалось зарегистрироваться.'
+                            : 'Registration failed.')
+                );
                 return;
             }
 
@@ -194,6 +215,8 @@ function LoginForm() {
             setErrorMessage(
                 language === 'uz'
                     ? 'Server bilan bog‘lanishda xatolik yuz berdi.'
+                    : language === 'ru'
+                    ? 'Ошибка подключения к серверу регистрации.'
                     : 'Failed to connect to registration server.'
             );
         }
@@ -266,12 +289,19 @@ function LoginForm() {
                         <AlertCircle className='size-4 shrink-0 mt-0.5' />
                         <div className='space-y-0.5'>
                             <p className='font-semibold'>
-                                {errorMessage || (language === 'uz' ? 'Kirishda xatolik yuz berdi' : 'Authentication error')}
+                                {errorMessage ||
+                                    (language === 'uz'
+                                        ? 'Kirishda xatolik yuz berdi'
+                                        : language === 'ru'
+                                        ? 'Ошибка входа'
+                                        : 'Authentication error')}
                             </p>
                             {errorParam === 'Configuration' && !errorMessage && (
                                 <p className='text-[11px] opacity-80'>
                                     {language === 'uz'
                                         ? 'Email va parolingiz bilan kiring.'
+                                        : language === 'ru'
+                                        ? 'Войдите с помощью email и пароля.'
                                         : 'Please sign in with your email and password.'}
                                 </p>
                             )}
@@ -444,7 +474,7 @@ function LoginForm() {
                         {/* Rolni tanlash: O'quvchi yoki O'qituvchi */}
                         <div className='space-y-1.5 pt-1'>
                             <label className='text-xs font-semibold text-foreground'>
-                                {language === 'uz' ? 'Profilingiz turi:' : 'Account Type:'}
+                                {language === 'uz' ? 'Profilingiz turi:' : language === 'ru' ? 'Тип профиля:' : 'Account Type:'}
                             </label>
                             <div className='grid grid-cols-2 gap-2'>
                                 <div

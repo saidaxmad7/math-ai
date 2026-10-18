@@ -29,20 +29,44 @@ export const viewport: Viewport = {
 };
 
 export const metadata: Metadata = {
+    metadataBase: new URL(
+        process.env.AUTH_URL ||
+        process.env.NEXTAUTH_URL ||
+        "https://math-ai-u65y.vercel.app"
+    ),
     title: {
-        default: "Math AI",
+        default: "Math AI — 9–11-sinflar uchun AI matematika platformasi",
         template: "%s | Math AI",
     },
-    description: "AI-powered mathematics learning platform",
+    description: "Sun'iy intellekt yordamida matematikani oson va qiziqarli o'rganing. 9–11-sinf darsliklari, shaxsiy AI repetitor, qadamma-qadam formulalar va interaktiv mashqlar.",
     applicationName: "Math AI",
     keywords: [
-        "Mathematics",
-        "AI",
-        "Education",
-        "Learning",
-        "Next.js",
-        "Practice",
+        "Math AI",
+        "Matematika AI",
+        "Sun'iy intellekt matematika",
+        "9-sinf algebra",
+        "10-sinf geometriya",
+        "11-sinf matematika",
+        "AI repetitor",
+        "O'zbekiston maktab darsliklari",
+        "Interaktiv matematika",
     ],
+    authors: [{ name: "Math AI Team" }],
+    creator: "Math AI",
+    publisher: "Math AI",
+    openGraph: {
+        type: "website",
+        locale: "uz_UZ",
+        url: "https://math-ai-u65y.vercel.app",
+        siteName: "Math AI",
+        title: "Math AI — 9–11-sinflar uchun AI matematika platformasi",
+        description: "Sun'iy intellekt yordamida matematikani oson va qiziqarli o'rganing. 9–11-sinf darsliklari, shaxsiy AI repetitor, qadamma-qadam formulalar va interaktiv mashqlar.",
+    },
+    twitter: {
+        card: "summary_large_image",
+        title: "Math AI — 9–11-sinflar uchun AI matematika platformasi",
+        description: "Sun'iy intellekt yordamida matematikani oson va qiziqarli o'rganing. 9–11-sinf darsliklari, shaxsiy AI repetitor, qadamma-qadam formulalar va interaktiv mashqlar.",
+    },
 };
 
 export default function RootLayout({

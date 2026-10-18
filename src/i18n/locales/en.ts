@@ -26,6 +26,7 @@ export const en: Translations = {
         language: 'Language',
         uzbek: 'O\'zbekcha',
         english: 'English',
+        russian: 'Russian',
         actions: 'Actions',
         close: 'Close',
     },
@@ -69,7 +70,7 @@ export const en: Translations = {
         tutorFeatureTitle: 'AI Tutor',
         tutorFeatureDesc: 'Step-by-step guidance tailored to each lesson.',
         footerText: '© 2026 Math AI',
-        designedBy: 'Designed & Developed by Saidaxmad',
+        designedBy: 'Designed & Developed by Saidahmad',
     },
     dashboard: {
         welcomeBack: 'Welcome back 👋',

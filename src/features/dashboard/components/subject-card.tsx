@@ -33,7 +33,7 @@ export function SubjectCard({ gradeId, id, name, color }: SubjectCardProps) {
             </div>
 
             <p className='mt-2 text-sm text-muted-foreground'>
-                {language === 'uz' ? 'Fanni ochish' : 'Open subject'}
+                {language === 'uz' ? 'Fanni ochish' : language === 'ru' ? 'Открыть предмет' : 'Open subject'}
             </p>
         </Link>
     );

@@ -36,6 +36,15 @@ function LoginForm() {
     const { translations, language } = useLanguage();
     const t = translations.auth;
 
+    const redirectToDashboard = () => {
+        if (typeof window !== 'undefined') {
+            window.location.assign('/dashboard');
+            return;
+        }
+
+        router.replace('/dashboard');
+    };
+
     const [mode, setMode] = useState<'signin' | 'signup'>('signin');
     const [isLoading, setIsLoading] = useState(false);
     const [errorMessage, setErrorMessage] = useState<string | null>(null);
@@ -63,8 +72,8 @@ function LoginForm() {
                 language === 'uz'
                     ? 'Google orqali kirishda xatolik yuz berdi.'
                     : language === 'ru'
-                    ? 'Ошибка при входе через Google.'
-                    : 'Failed to sign in with Google.'
+                      ? 'Ошибка при входе через Google.'
+                      : 'Failed to sign in with Google.',
             );
         }
     };
@@ -80,8 +89,8 @@ function LoginForm() {
                 language === 'uz'
                     ? 'Iltimos, email va parolni to‘liq kiriting.'
                     : language === 'ru'
-                    ? 'Пожалуйста, введите email и пароль.'
-                    : 'Please enter both email and password.'
+                      ? 'Пожалуйста, введите email и пароль.'
+                      : 'Please enter both email and password.',
             );
             return;
         }
@@ -101,11 +110,11 @@ function LoginForm() {
                     language === 'uz'
                         ? 'Xush kelibsiz! Tizimga muvaffaqiyatli kirdingiz.'
                         : language === 'ru'
-                        ? 'Добро пожаловать! Вы успешно вошли в систему.'
-                        : 'Welcome back! Signed in successfully.'
+                          ? 'Добро пожаловать! Вы успешно вошли в систему.'
+                          : 'Welcome back! Signed in successfully.',
                 );
-                router.push('/dashboard');
-                router.refresh();
+                redirectToDashboard();
+                return;
             } else {
                 setIsLoading(false);
                 setErrorMessage(t.invalidCredentials);
@@ -116,8 +125,8 @@ function LoginForm() {
                 language === 'uz'
                     ? 'Tizimga kirishda xatolik yuz berdi.'
                     : language === 'ru'
-                    ? 'Произошла ошибка при входе в систему.'
-                    : 'An error occurred during sign in.'
+                      ? 'Произошла ошибка при входе в систему.'
+                      : 'An error occurred during sign in.',
             );
         }
     };
@@ -135,8 +144,8 @@ function LoginForm() {
                 language === 'uz'
                     ? 'Iltimos, barcha maydonlarni to‘ldiring.'
                     : language === 'ru'
-                    ? 'Пожалуйста, заполните все обязательные поля.'
-                    : 'Please fill in all required fields.'
+                      ? 'Пожалуйста, заполните все обязательные поля.'
+                      : 'Please fill in all required fields.',
             );
             return;
         }
@@ -146,8 +155,8 @@ function LoginForm() {
                 language === 'uz'
                     ? 'Parol kamida 6 ta belgidan iborat bo‘lishi kerak.'
                     : language === 'ru'
-                    ? 'Пароль должен содержать не менее 6 символов.'
-                    : 'Password must be at least 6 characters.'
+                      ? 'Пароль должен содержать не менее 6 символов.'
+                      : 'Password must be at least 6 characters.',
             );
             return;
         }
@@ -157,8 +166,8 @@ function LoginForm() {
                 language === 'uz'
                     ? 'O‘qituvchi / Admin maxfiy xavfsizlik kodini kiriting.'
                     : language === 'ru'
-                    ? 'Введите секретный PIN-код учителя / администратора.'
-                    : 'Please enter the teacher / admin security PIN.'
+                      ? 'Введите секретный PIN-код учителя / администратора.'
+                      : 'Please enter the teacher / admin security PIN.',
             );
             return;
         }
@@ -174,7 +183,8 @@ function LoginForm() {
                     email: cleanEmail,
                     password,
                     role,
-                    teacherCode: role === 'ADMIN' ? teacherCode.trim() : undefined,
+                    teacherCode:
+                        role === 'ADMIN' ? teacherCode.trim() : undefined,
                 }),
             });
 
@@ -187,8 +197,8 @@ function LoginForm() {
                         (language === 'uz'
                             ? 'Ro‘yxatdan o‘tib bo‘lmadi.'
                             : language === 'ru'
-                            ? 'Не удалось зарегистрироваться.'
-                            : 'Registration failed.')
+                              ? 'Не удалось зарегистрироваться.'
+                              : 'Registration failed.'),
                 );
                 return;
             }
@@ -204,8 +214,8 @@ function LoginForm() {
             });
 
             if (loginResult?.ok) {
-                router.push('/dashboard');
-                router.refresh();
+                redirectToDashboard();
+                return;
             } else {
                 setIsLoading(false);
                 setMode('signin');
@@ -216,8 +226,8 @@ function LoginForm() {
                 language === 'uz'
                     ? 'Server bilan bog‘lanishda xatolik yuz berdi.'
                     : language === 'ru'
-                    ? 'Ошибка подключения к серверу регистрации.'
-                    : 'Failed to connect to registration server.'
+                      ? 'Ошибка подключения к серверу регистрации.'
+                      : 'Failed to connect to registration server.',
             );
         }
     };
@@ -236,13 +246,17 @@ function LoginForm() {
 
                     <div className='space-y-1'>
                         <div className='flex items-center justify-center gap-2'>
-                            <h1 className='text-2xl font-bold tracking-tight'>Math AI</h1>
+                            <h1 className='text-2xl font-bold tracking-tight'>
+                                Math AI
+                            </h1>
                             <span className='rounded-full bg-primary/10 px-2 py-0.5 text-[10px] font-bold text-primary'>
                                 2.0
                             </span>
                         </div>
                         <p className='text-xs text-muted-foreground max-w-xs'>
-                            {mode === 'signin' ? t.signInSubtitle : t.signUpSubtitle}
+                            {mode === 'signin'
+                                ? t.signInSubtitle
+                                : t.signUpSubtitle}
                         </p>
                     </div>
                 </div>
@@ -259,7 +273,7 @@ function LoginForm() {
                             'flex items-center justify-center gap-2 rounded-xl py-2.5 text-xs font-semibold transition-all duration-200 select-none cursor-pointer',
                             mode === 'signin'
                                 ? 'bg-card text-foreground shadow-sm'
-                                : 'text-muted-foreground hover:text-foreground'
+                                : 'text-muted-foreground hover:text-foreground',
                         )}
                     >
                         <LogIn className='size-3.5' />
@@ -275,7 +289,7 @@ function LoginForm() {
                             'flex items-center justify-center gap-2 rounded-xl py-2.5 text-xs font-semibold transition-all duration-200 select-none cursor-pointer',
                             mode === 'signup'
                                 ? 'bg-card text-foreground shadow-sm'
-                                : 'text-muted-foreground hover:text-foreground'
+                                : 'text-muted-foreground hover:text-foreground',
                         )}
                     >
                         <UserPlus className='size-3.5' />
@@ -293,18 +307,19 @@ function LoginForm() {
                                     (language === 'uz'
                                         ? 'Kirishda xatolik yuz berdi'
                                         : language === 'ru'
-                                        ? 'Ошибка входа'
-                                        : 'Authentication error')}
+                                          ? 'Ошибка входа'
+                                          : 'Authentication error')}
                             </p>
-                            {errorParam === 'Configuration' && !errorMessage && (
-                                <p className='text-[11px] opacity-80'>
-                                    {language === 'uz'
-                                        ? 'Email va parolingiz bilan kiring.'
-                                        : language === 'ru'
-                                        ? 'Войдите с помощью email и пароля.'
-                                        : 'Please sign in with your email and password.'}
-                                </p>
-                            )}
+                            {errorParam === 'Configuration' &&
+                                !errorMessage && (
+                                    <p className='text-[11px] opacity-80'>
+                                        {language === 'uz'
+                                            ? 'Email va parolingiz bilan kiring.'
+                                            : language === 'ru'
+                                              ? 'Войдите с помощью email и пароля.'
+                                              : 'Please sign in with your email and password.'}
+                                    </p>
+                                )}
                         </div>
                     </div>
                 )}
@@ -377,18 +392,26 @@ function LoginForm() {
                                     type={showPassword ? 'text' : 'password'}
                                     required
                                     value={password}
-                                    onChange={(e) => setPassword(e.target.value)}
+                                    onChange={(e) =>
+                                        setPassword(e.target.value)
+                                    }
                                     placeholder={t.passwordPlaceholder}
                                     disabled={isLoading}
                                     className='h-11 rounded-xl pr-10 text-sm'
                                 />
                                 <button
                                     type='button'
-                                    onClick={() => setShowPassword(!showPassword)}
+                                    onClick={() =>
+                                        setShowPassword(!showPassword)
+                                    }
                                     className='absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors'
                                     tabIndex={-1}
                                 >
-                                    {showPassword ? <EyeOff className='size-4' /> : <Eye className='size-4' />}
+                                    {showPassword ? (
+                                        <EyeOff className='size-4' />
+                                    ) : (
+                                        <Eye className='size-4' />
+                                    )}
                                 </button>
                             </div>
                         </div>
@@ -455,18 +478,26 @@ function LoginForm() {
                                     type={showPassword ? 'text' : 'password'}
                                     required
                                     value={password}
-                                    onChange={(e) => setPassword(e.target.value)}
+                                    onChange={(e) =>
+                                        setPassword(e.target.value)
+                                    }
                                     placeholder={t.passwordPlaceholder}
                                     disabled={isLoading}
                                     className='h-10 rounded-xl pr-10 text-sm'
                                 />
                                 <button
                                     type='button'
-                                    onClick={() => setShowPassword(!showPassword)}
+                                    onClick={() =>
+                                        setShowPassword(!showPassword)
+                                    }
                                     className='absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors'
                                     tabIndex={-1}
                                 >
-                                    {showPassword ? <EyeOff className='size-4' /> : <Eye className='size-4' />}
+                                    {showPassword ? (
+                                        <EyeOff className='size-4' />
+                                    ) : (
+                                        <Eye className='size-4' />
+                                    )}
                                 </button>
                             </div>
                         </div>
@@ -474,39 +505,65 @@ function LoginForm() {
                         {/* Rolni tanlash: O'quvchi yoki O'qituvchi */}
                         <div className='space-y-1.5 pt-1'>
                             <label className='text-xs font-semibold text-foreground'>
-                                {language === 'uz' ? 'Profilingiz turi:' : language === 'ru' ? 'Тип профиля:' : 'Account Type:'}
+                                {language === 'uz'
+                                    ? 'Profilingiz turi:'
+                                    : language === 'ru'
+                                      ? 'Тип профиля:'
+                                      : 'Account Type:'}
                             </label>
                             <div className='grid grid-cols-2 gap-2'>
                                 <div
                                     role='button'
                                     tabIndex={0}
                                     onClick={() => setRole('USER')}
-                                    onKeyDown={(e) => e.key === 'Enter' && setRole('USER')}
+                                    onKeyDown={(e) =>
+                                        e.key === 'Enter' && setRole('USER')
+                                    }
                                     className={cn(
                                         'flex items-center gap-2 rounded-xl border p-2.5 cursor-pointer transition-all select-none',
                                         role === 'USER'
                                             ? 'border-primary bg-primary/[0.08] text-foreground font-semibold ring-1 ring-primary/30'
-                                            : 'border-border/60 bg-muted/30 text-muted-foreground hover:bg-muted/60'
+                                            : 'border-border/60 bg-muted/30 text-muted-foreground hover:bg-muted/60',
                                     )}
                                 >
-                                    <GraduationCap className={cn('size-4', role === 'USER' ? 'text-primary' : 'text-muted-foreground')} />
-                                    <span className='text-xs'>{t.roleStudent}</span>
+                                    <GraduationCap
+                                        className={cn(
+                                            'size-4',
+                                            role === 'USER'
+                                                ? 'text-primary'
+                                                : 'text-muted-foreground',
+                                        )}
+                                    />
+                                    <span className='text-xs'>
+                                        {t.roleStudent}
+                                    </span>
                                 </div>
 
                                 <div
                                     role='button'
                                     tabIndex={0}
                                     onClick={() => setRole('ADMIN')}
-                                    onKeyDown={(e) => e.key === 'Enter' && setRole('ADMIN')}
+                                    onKeyDown={(e) =>
+                                        e.key === 'Enter' && setRole('ADMIN')
+                                    }
                                     className={cn(
                                         'flex items-center gap-2 rounded-xl border p-2.5 cursor-pointer transition-all select-none',
                                         role === 'ADMIN'
                                             ? 'border-primary bg-primary/[0.08] text-foreground font-semibold ring-1 ring-primary/30'
-                                            : 'border-border/60 bg-muted/30 text-muted-foreground hover:bg-muted/60'
+                                            : 'border-border/60 bg-muted/30 text-muted-foreground hover:bg-muted/60',
                                     )}
                                 >
-                                    <ShieldCheck className={cn('size-4', role === 'ADMIN' ? 'text-primary' : 'text-muted-foreground')} />
-                                    <span className='text-xs'>{t.roleTeacher}</span>
+                                    <ShieldCheck
+                                        className={cn(
+                                            'size-4',
+                                            role === 'ADMIN'
+                                                ? 'text-primary'
+                                                : 'text-muted-foreground',
+                                        )}
+                                    />
+                                    <span className='text-xs'>
+                                        {t.roleTeacher}
+                                    </span>
                                 </div>
                             </div>
                         </div>
@@ -522,21 +579,33 @@ function LoginForm() {
                                 </label>
                                 <div className='relative'>
                                     <Input
-                                        type={showTeacherCode ? 'text' : 'password'}
+                                        type={
+                                            showTeacherCode
+                                                ? 'text'
+                                                : 'password'
+                                        }
                                         required
                                         value={teacherCode}
-                                        onChange={(e) => setTeacherCode(e.target.value)}
+                                        onChange={(e) =>
+                                            setTeacherCode(e.target.value)
+                                        }
                                         placeholder={t.teacherCodePlaceholder}
                                         disabled={isLoading}
                                         className='h-9 rounded-lg font-mono tracking-widest text-xs pr-9'
                                     />
                                     <button
                                         type='button'
-                                        onClick={() => setShowTeacherCode(!showTeacherCode)}
+                                        onClick={() =>
+                                            setShowTeacherCode(!showTeacherCode)
+                                        }
                                         className='absolute right-2.5 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors'
                                         tabIndex={-1}
                                     >
-                                        {showTeacherCode ? <EyeOff className='size-3.5' /> : <Eye className='size-3.5' />}
+                                        {showTeacherCode ? (
+                                            <EyeOff className='size-3.5' />
+                                        ) : (
+                                            <Eye className='size-3.5' />
+                                        )}
                                     </button>
                                 </div>
                                 <p className='text-[10px] text-muted-foreground'>
@@ -572,7 +641,9 @@ function LoginForm() {
                         }}
                         className='text-xs font-medium text-primary hover:underline transition-all cursor-pointer'
                     >
-                        {mode === 'signin' ? t.noAccountPrompt : t.haveAccountPrompt}
+                        {mode === 'signin'
+                            ? t.noAccountPrompt
+                            : t.haveAccountPrompt}
                     </button>
                 </div>
             </CardContent>
@@ -586,7 +657,7 @@ export default function LoginPage() {
             {/* Orqa fon geometrik suv belgilari (Matematika belgilari) */}
             <div className='pointer-events-none absolute -top-12 -left-12 size-80 rounded-full bg-primary/[0.05] blur-3xl' />
             <div className='pointer-events-none absolute -bottom-12 -right-12 size-80 rounded-full bg-primary/[0.07] blur-3xl' />
-            
+
             <span className='pointer-events-none absolute top-12 left-16 select-none font-serif text-6xl font-light text-primary/[0.04]'>
                 &int;
             </span>
@@ -605,7 +676,14 @@ export default function LoginPage() {
                 <LanguageSwitcher />
             </div>
 
-            <Suspense fallback={<div className='text-sm text-muted-foreground flex items-center gap-2'><Loader2 className='size-4 animate-spin' /> Yuklanmoqda...</div>}>
+            <Suspense
+                fallback={
+                    <div className='text-sm text-muted-foreground flex items-center gap-2'>
+                        <Loader2 className='size-4 animate-spin' />{' '}
+                        Yuklanmoqda...
+                    </div>
+                }
+            >
                 <LoginForm />
             </Suspense>
         </main>
